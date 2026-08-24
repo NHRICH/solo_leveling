@@ -43,10 +43,7 @@ Deep work made simple. A minimalist Pomodoro-style timer that keeps you in the z
   <img src="assets/github%20images/3.png" width="200" />
   <img src="assets/github%20images/4.png" width="200" />
   <br/>
-  <img src="assets/github%20images/5.png" width="200" />
-  <img src="assets/github%20images/6.png" width="200" />
-  <img src="assets/github%20images/7.png" width="200" />
-  <img src="assets/github%20images/8.png" width="200" />
+  
 </div>
 
 *Visual showcase of the SoloLeveling Productivity Suite.*
@@ -88,7 +85,7 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/sololeveling-dev/solo-leveling-app.git
+   git clone https://github.com/sololeveling-dev/solo_leveling.git
    cd solo-leveling-app
    ```
 
