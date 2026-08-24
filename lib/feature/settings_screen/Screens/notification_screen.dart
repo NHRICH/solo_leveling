@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ascend/feature/settings_screen/widgets/common_setting_tile.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/common_setting_tile.dart';
 
 // Basic provider for notification settings
 final notificationSettingsProvider =

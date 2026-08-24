@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/data/db/tables/note_table.dart';
-import 'package:ascend/domain/models/note_model.dart';
-import 'package:ascend/feature/tasks/view_models/note_view_model.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
+import 'package:solo_leveling/domain/models/note_model.dart';
+import 'package:solo_leveling/feature/tasks/view_models/note_view_model.dart';
 import 'package:intl/intl.dart';
-import 'package:ascend/view_model/gamification_provider.dart';
+import 'package:solo_leveling/view_model/gamification_provider.dart';
 
 import 'note_text_field.dart';
 import 'category_picker_sheet.dart';
@@ -239,7 +239,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
                   child: Row(
                     children: [
                       Text(
-                        _isEditMode ? 'Edit Task' : 'New Task',
+                        _isEditMode ? 'Edit Quest' : 'New Quest',
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w900,
                           color: cs.onSurface,
@@ -296,7 +296,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
                   ),
                   const SizedBox(height: 32),
 
-                  _buildSectionLabel(context, "Task Details"),
+                  _buildSectionLabel(context, "Quest Details"),
                   const SizedBox(height: 12),
 
                   // Settings Container
@@ -397,7 +397,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
                           ),
                         ),
                         child: Text(
-                          _isEditMode ? 'UPDATE TASK' : 'CREATE TASK',
+                          _isEditMode ? 'UPDATE QUEST' : 'CREATE QUEST',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1.5,

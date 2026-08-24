@@ -2,13 +2,17 @@
   <img src="assets/images/logo.png" width="120" />
 </div>
 
-# Ascend
+# SoloLeveling
 
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-**Ascend** is a premium, all-in-one productivity suite designed to help you organize your life, track your habits, and focus on what matters most. Built with Flutter and powered by Riverpod and Drift, it provides a seamless, high-performance experience across all platforms.
+**SoloLeveling** is a premium, all-in-one productivity suite designed to help you organize your life, track your habits, and focus on what matters most. Built with Flutter and powered by Riverpod and Drift, it delivers a seamless, high-performance experience across all platforms.
+
+**Open Source** — This project is proudly open source. We've built a gamified productivity experience inspired by *Solo Leveling*, and we invite you to join us in leveling up your daily routine. All contributions are welcome!
+
+> **Origins:** SoloLeveling was originally born as **Ascend** — a gamified productivity suite created by [onimusha-dev](https://github.com/onimusha-dev). The original repository can be found at [github.com/onimusha-dev/ascend](https://github.com/onimusha-dev/ascend) (git origin: `https://github.com/onimusha-dev/ascend.git`). It has since been reborn as SoloLeveling, fully embracing the Solo Leveling theme with gamified ranks, titles, and level-up feats.
 
 ---
 
@@ -24,7 +28,10 @@ Reflect on your journey. A dedicated space for thoughts, memories, and daily gra
 Build lasting routines. Track streaks, visualize progress with interactive charts, and gamify your productivity.
 
 ### Focus Mode
-Deep work made simple. A minimalist Pomodoro-style timer designed to keep you in the zone and minimize distractions.
+Deep work made simple. A minimalist Pomodoro-style timer that keeps you in the zone and maximizes focus.
+
+### Solo Leveling Gamification
+**New:** Unlock "Solo Leveling"‑inspired ranks, titles, and level‑up feats as you complete tasks and keep streaks alive. Forge your strongest self.
 
 ---
 
@@ -42,13 +49,13 @@ Deep work made simple. A minimalist Pomodoro-style timer designed to keep you in
   <img src="assets/github%20images/8.png" width="200" />
 </div>
 
-*Visual showcase of the Ascend Productivity Suite.*
+*Visual showcase of the SoloLeveling Productivity Suite.*
 
 ---
 
 ## Project Structure
 
-The project follows a feature-first clean architecture pattern for maximum scalability and maintainability.
+The project follows a **feature-first clean architecture** pattern for maximum scalability and maintainability.
 
 ```text
 lib/
@@ -81,8 +88,8 @@ lib/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/onimusha-dev/ascend-mobile.git
-   cd ascend-mobile
+   git clone https://github.com/sololeveling-dev/solo-leveling-app.git
+   cd solo-leveling-app
    ```
 
 2. **Install dependencies**
@@ -105,7 +112,7 @@ lib/
 ## Commands Reference
 
 | Command | Description |
-|---------|-------------|
+|----------|-------------|
 | `flutter pub get` | Install dependencies |
 | `flutter pub run build_runner build` | Run one-time code generation |
 | `flutter pub run build_runner watch` | Run continuous code generation |
@@ -114,16 +121,16 @@ lib/
 
 ---
 
-## Hire Me!
+## License
 
-I am a passionate Flutter Developer dedicated to building high-quality, performant, and beautiful applications.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
-- **Email**: [your.email@example.com]
-- **LinkedIn**: [linkedin.com/in/yourprofile]
-- **Portfolio**: [yourportfolio.com]
+## Contributing
+
+We welcome contributions! Feel free to open issues, submit pull requests, or suggest new features. Let's build the ultimate productivity suite together.
 
 ---
 
 <div align="center">
-  MADE BY ONIMUSHA
+  Made with ❤️ for the open source community
 </div>

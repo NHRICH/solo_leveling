@@ -9,6 +9,12 @@ class UserProgressTable extends Table {
 
   IntColumn get currentStreak => integer().withDefault(const Constant(0))();
 
+  // Solo Leveling "System" fields
+  TextColumn get rank => text().withDefault(const Constant('E'))();
+
+  IntColumn get totalTasksCompleted =>
+      integer().withDefault(const Constant(0))();
+
   DateTimeColumn get lastCompletionDate => dateTime().nullable()();
 
   BoolColumn get weeklyStreakRewardClaimed =>

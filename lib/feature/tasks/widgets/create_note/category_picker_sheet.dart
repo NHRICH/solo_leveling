@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/feature/tasks/view_models/task_category_view_model.dart';
-import 'package:ascend/core/utils/icon_utils.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/feature/tasks/view_models/task_category_view_model.dart';
+import 'package:solo_leveling/core/utils/icon_utils.dart';
 import 'add_category_dialog.dart';
 
 class CategoryPickerBottomSheet extends ConsumerWidget {

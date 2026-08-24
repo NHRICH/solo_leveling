@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
-import 'package:ascend/core/services/app_preferences.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
 
 class AnalyticsService {
   /// HACK: this is gonna be replaced with real logic later
   // TODO: Replace with your actual Vercel project URL once deployed
-  static const String _baseUrl = 'https://ascend-in.vercel.app/api/v1';
+  static const String _baseUrl = 'https://solo-leveling-api.vercel.app/api/v1';
 
   static const String _keyUserId = 'analytics_user_id';
   static const String _keyErrors = 'analytics_cached_errors';

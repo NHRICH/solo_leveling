@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/view_model/gamification_provider.dart';
-import 'package:ascend/data/db/tables/note_table.dart';
-import 'package:ascend/feature/tasks/view_models/task_category_view_model.dart';
-import 'package:ascend/feature/tasks/widgets/task_edit_options.dart';
-import 'package:ascend/core/utils/icon_utils.dart';
+import 'package:solo_leveling/view_model/gamification_provider.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
+import 'package:solo_leveling/feature/tasks/view_models/task_category_view_model.dart';
+import 'package:solo_leveling/feature/tasks/widgets/task_edit_options.dart';
+import 'package:solo_leveling/core/utils/icon_utils.dart';
 import 'package:intl/intl.dart';
 
 class TasksCard extends ConsumerStatefulWidget {
@@ -90,7 +90,7 @@ class _TasksCardState extends ConsumerState<TasksCard>
         : colorScheme.onSurface;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
         onLongPress: () =>
             showTaskOptions(context, ref, widget.id, widget.isCompleted),
@@ -102,7 +102,7 @@ class _TasksCardState extends ConsumerState<TasksCard>
             color: widget.isCompleted
                 ? colorScheme.surfaceContainerHighest.withAlpha(40)
                 : colorScheme.surfaceContainerHighest.withAlpha(80),
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: widget.isCompleted
                   ? Colors.transparent
@@ -111,7 +111,7 @@ class _TasksCardState extends ConsumerState<TasksCard>
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -121,9 +121,9 @@ class _TasksCardState extends ConsumerState<TasksCard>
                   children: [
                     if (!widget.isCompleted) ...[
                       Container(
-                        width: 12,
-                        height: 12,
-                        margin: const EdgeInsets.only(top: 6, right: 12),
+                        width: 10,
+                        height: 10,
+                        margin: const EdgeInsets.only(top: 6, right: 10),
                         decoration: BoxDecoration(
                           color: priorityColor,
                           shape: BoxShape.circle,
@@ -137,10 +137,12 @@ class _TasksCardState extends ConsumerState<TasksCard>
                           color: Colors.transparent,
                           child: Text(
                             widget.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w800,
                               color: textColor,
-                              fontSize: 18,
+                              fontSize: 16,
                               letterSpacing: -0.3,
                               decoration: widget.isCompleted
                                   ? TextDecoration.lineThrough
@@ -154,11 +156,11 @@ class _TasksCardState extends ConsumerState<TasksCard>
                       Icon(
                         Icons.check_circle_rounded,
                         color: colorScheme.primary,
-                        size: 24,
+                        size: 20,
                       ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
 
                 // Meta Row: Category tags and Time (flowing horizontally)
                 Wrap(
@@ -237,23 +239,24 @@ class _TasksCardState extends ConsumerState<TasksCard>
                     // Time indicator
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                        horizontal: 6,
+                        vertical: 3,
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             Icons.access_time_filled_rounded,
-                            size: 14,
+                            size: 13,
                             color: textColor.withAlpha(100),
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 3),
                           Text(
                             DateFormat('h:mm a').format(widget.dueTime),
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: textColor.withAlpha(150),
                               fontWeight: FontWeight.w600,
+                              fontSize: 11,
                             ),
                           ),
                         ],
@@ -269,17 +272,18 @@ class _TasksCardState extends ConsumerState<TasksCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (widget.description.isNotEmpty) ...[
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12),
                         // Removed the "bar roler" (Divider) as requested
                         Text(
                           widget.description,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: textColor.withAlpha(180),
                             height: 1.4,
+                            fontSize: 13,
                           ),
                         ),
                       ],
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
                       // Priority Label explicitly inside expanded view
                       if (widget.priority != Priority.none)
                         Row(

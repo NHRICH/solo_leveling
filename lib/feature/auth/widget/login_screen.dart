@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ascend/core/services/auth_service.dart';
-import 'package:ascend/core/services/analytics_service.dart';
-import 'package:ascend/feature/auth/widget/auth_text_field.dart';
-import 'package:ascend/feature/auth/widget/register_screen.dart';
+import 'package:solo_leveling/core/services/auth_service.dart';
+import 'package:solo_leveling/core/services/analytics_service.dart';
+import 'package:solo_leveling/feature/auth/widget/auth_text_field.dart';
+import 'package:solo_leveling/feature/auth/widget/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ascend/feature/auth/widget/login_screen.dart';
-import 'package:ascend/feature/auth/widget/register_screen.dart';
+import 'package:solo_leveling/feature/auth/widget/login_screen.dart';
+import 'package:solo_leveling/feature/auth/widget/register_screen.dart';
 
 class UserProfileCard extends StatelessWidget {
   final ColorScheme cs;

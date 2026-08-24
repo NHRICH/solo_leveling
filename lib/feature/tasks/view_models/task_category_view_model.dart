@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/core/constants/default_categories.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/core/constants/default_categories.dart';
 
 final taskCategoryViewModelProvider =
     NotifierProvider<

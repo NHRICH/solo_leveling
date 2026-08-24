@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:ascend/core/services/app_preferences.dart';
-import 'package:ascend/feature/settings_screen/widgets/common_setting_tile.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/common_setting_tile.dart';
 
 final periodicBackupsProvider =
     NotifierProvider<PeriodicBackupsNotifier, PeriodicBackupsState>(
@@ -188,7 +188,7 @@ class PeriodicBackupsScreen extends ConsumerWidget {
             const SizedBox(height: 32),
             Center(
               child: Text(
-                'Make sure Ascend has permission to run in the background.',
+                'Make sure SoloLeveling has permission to run in the background.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall?.copyWith(color: cs.outline),
               ),

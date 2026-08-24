@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ascend/core/constants/onboarding.dart';
-import 'package:ascend/core/services/app_preferences.dart';
-import 'package:ascend/main_app_screen.dart';
-import 'package:ascend/feature/onboarding/widgets/onboarding_page_widget.dart';
-import 'package:ascend/feature/onboarding/widgets/onboarding_notification_widget.dart';
-import 'package:ascend/feature/onboarding/widgets/onboarding_backup_widget.dart';
+import 'package:solo_leveling/core/constants/onboarding.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
+import 'package:solo_leveling/main_app_screen.dart';
+import 'package:solo_leveling/feature/onboarding/widgets/onboarding_page_widget.dart';
+import 'package:solo_leveling/feature/onboarding/widgets/onboarding_notification_widget.dart';
+import 'package:solo_leveling/feature/onboarding/widgets/onboarding_backup_widget.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

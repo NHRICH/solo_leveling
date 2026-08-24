@@ -1,12 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/data/repository/note_repository.dart';
-import 'package:ascend/feature/settings_screen/Screens/data_and_privacy_screen/services/backup_and_restore.dart';
-import 'package:ascend/feature/settings_screen/widgets/common_setting_tile.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/data/repository/note_repository.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/data_and_privacy_screen/services/backup_and_restore.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/common_setting_tile.dart';
 import 'periodic_backups_screen.dart';
-import 'package:ascend/core/services/notification_service.dart';
+import 'package:solo_leveling/core/services/notification_service.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class DataAndPrivacyScreen extends ConsumerStatefulWidget {

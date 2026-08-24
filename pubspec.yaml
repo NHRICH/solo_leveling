@@ -1,5 +1,5 @@
-name: ascend
-description: "Ascend: Task manager and daily planner."
+name: solo_leveling
+description: "SoloLeveling: Task manager, habit tracker, and daily planner."
 publish_to: "none"
 
 version: 1.0.0+1

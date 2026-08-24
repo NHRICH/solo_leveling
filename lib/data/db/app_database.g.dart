@@ -128,6 +128,18 @@ class $NoteTableTable extends NoteTable
         requiredDuringInsert: false,
         defaultValue: const Constant(0),
       ).withConverter<TaskDifficulty>($NoteTableTable.$converterdifficulty);
+  static const VerificationMeta _xpValueMeta = const VerificationMeta(
+    'xpValue',
+  );
+  @override
+  late final GeneratedColumn<int> xpValue = GeneratedColumn<int>(
+    'xp_value',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(10),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -140,6 +152,7 @@ class $NoteTableTable extends NoteTable
     priority,
     taskType,
     difficulty,
+    xpValue,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -206,6 +219,12 @@ class $NoteTableTable extends NoteTable
         taskType.isAcceptableOrUnknown(data['task_type']!, _taskTypeMeta),
       );
     }
+    if (data.containsKey('xp_value')) {
+      context.handle(
+        _xpValueMeta,
+        xpValue.isAcceptableOrUnknown(data['xp_value']!, _xpValueMeta),
+      );
+    }
     return context;
   }
 
@@ -259,6 +278,10 @@ class $NoteTableTable extends NoteTable
           data['${effectivePrefix}difficulty'],
         )!,
       ),
+      xpValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}xp_value'],
+      )!,
     );
   }
 
@@ -284,6 +307,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
   final Priority priority;
   final String? taskType;
   final TaskDifficulty difficulty;
+  final int xpValue;
   const NoteTableData({
     required this.id,
     required this.title,
@@ -295,6 +319,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     required this.priority,
     this.taskType,
     required this.difficulty,
+    required this.xpValue,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -323,6 +348,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
         $NoteTableTable.$converterdifficulty.toSql(difficulty),
       );
     }
+    map['xp_value'] = Variable<int>(xpValue);
     return map;
   }
 
@@ -344,6 +370,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           ? const Value.absent()
           : Value(taskType),
       difficulty: Value(difficulty),
+      xpValue: Value(xpValue),
     );
   }
 
@@ -367,6 +394,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
       difficulty: $NoteTableTable.$converterdifficulty.fromJson(
         serializer.fromJson<int>(json['difficulty']),
       ),
+      xpValue: serializer.fromJson<int>(json['xpValue']),
     );
   }
   @override
@@ -387,6 +415,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
       'difficulty': serializer.toJson<int>(
         $NoteTableTable.$converterdifficulty.toJson(difficulty),
       ),
+      'xpValue': serializer.toJson<int>(xpValue),
     };
   }
 
@@ -401,6 +430,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     Priority? priority,
     Value<String?> taskType = const Value.absent(),
     TaskDifficulty? difficulty,
+    int? xpValue,
   }) => NoteTableData(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -412,6 +442,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     priority: priority ?? this.priority,
     taskType: taskType.present ? taskType.value : this.taskType,
     difficulty: difficulty ?? this.difficulty,
+    xpValue: xpValue ?? this.xpValue,
   );
   NoteTableData copyWithCompanion(NoteTableCompanion data) {
     return NoteTableData(
@@ -431,6 +462,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
       difficulty: data.difficulty.present
           ? data.difficulty.value
           : this.difficulty,
+      xpValue: data.xpValue.present ? data.xpValue.value : this.xpValue,
     );
   }
 
@@ -446,7 +478,8 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           ..write('updatedAt: $updatedAt, ')
           ..write('priority: $priority, ')
           ..write('taskType: $taskType, ')
-          ..write('difficulty: $difficulty')
+          ..write('difficulty: $difficulty, ')
+          ..write('xpValue: $xpValue')
           ..write(')'))
         .toString();
   }
@@ -463,6 +496,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     priority,
     taskType,
     difficulty,
+    xpValue,
   );
   @override
   bool operator ==(Object other) =>
@@ -477,7 +511,8 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           other.updatedAt == this.updatedAt &&
           other.priority == this.priority &&
           other.taskType == this.taskType &&
-          other.difficulty == this.difficulty);
+          other.difficulty == this.difficulty &&
+          other.xpValue == this.xpValue);
 }
 
 class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
@@ -491,6 +526,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
   final Value<Priority> priority;
   final Value<String?> taskType;
   final Value<TaskDifficulty> difficulty;
+  final Value<int> xpValue;
   const NoteTableCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -502,6 +538,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     this.priority = const Value.absent(),
     this.taskType = const Value.absent(),
     this.difficulty = const Value.absent(),
+    this.xpValue = const Value.absent(),
   });
   NoteTableCompanion.insert({
     this.id = const Value.absent(),
@@ -514,6 +551,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     this.priority = const Value.absent(),
     this.taskType = const Value.absent(),
     this.difficulty = const Value.absent(),
+    this.xpValue = const Value.absent(),
   }) : title = Value(title);
   static Insertable<NoteTableData> custom({
     Expression<int>? id,
@@ -526,6 +564,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     Expression<int>? priority,
     Expression<String>? taskType,
     Expression<int>? difficulty,
+    Expression<int>? xpValue,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -538,6 +577,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
       if (priority != null) 'priority': priority,
       if (taskType != null) 'task_type': taskType,
       if (difficulty != null) 'difficulty': difficulty,
+      if (xpValue != null) 'xp_value': xpValue,
     });
   }
 
@@ -552,6 +592,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     Value<Priority>? priority,
     Value<String?>? taskType,
     Value<TaskDifficulty>? difficulty,
+    Value<int>? xpValue,
   }) {
     return NoteTableCompanion(
       id: id ?? this.id,
@@ -564,6 +605,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
       priority: priority ?? this.priority,
       taskType: taskType ?? this.taskType,
       difficulty: difficulty ?? this.difficulty,
+      xpValue: xpValue ?? this.xpValue,
     );
   }
 
@@ -604,6 +646,9 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
         $NoteTableTable.$converterdifficulty.toSql(difficulty.value),
       );
     }
+    if (xpValue.present) {
+      map['xp_value'] = Variable<int>(xpValue.value);
+    }
     return map;
   }
 
@@ -619,7 +664,8 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
           ..write('updatedAt: $updatedAt, ')
           ..write('priority: $priority, ')
           ..write('taskType: $taskType, ')
-          ..write('difficulty: $difficulty')
+          ..write('difficulty: $difficulty, ')
+          ..write('xpValue: $xpValue')
           ..write(')'))
         .toString();
   }
@@ -1027,6 +1073,27 @@ class $UserProgressTableTable extends UserProgressTable
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _rankMeta = const VerificationMeta('rank');
+  @override
+  late final GeneratedColumn<String> rank = GeneratedColumn<String>(
+    'rank',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('E'),
+  );
+  static const VerificationMeta _totalTasksCompletedMeta =
+      const VerificationMeta('totalTasksCompleted');
+  @override
+  late final GeneratedColumn<int> totalTasksCompleted = GeneratedColumn<int>(
+    'total_tasks_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _lastCompletionDateMeta =
       const VerificationMeta('lastCompletionDate');
   @override
@@ -1083,6 +1150,8 @@ class $UserProgressTableTable extends UserProgressTable
     totalPoints,
     currentLevel,
     currentStreak,
+    rank,
+    totalTasksCompleted,
     lastCompletionDate,
     weeklyStreakRewardClaimed,
     createdAt,
@@ -1127,6 +1196,21 @@ class $UserProgressTableTable extends UserProgressTable
         currentStreak.isAcceptableOrUnknown(
           data['current_streak']!,
           _currentStreakMeta,
+        ),
+      );
+    }
+    if (data.containsKey('rank')) {
+      context.handle(
+        _rankMeta,
+        rank.isAcceptableOrUnknown(data['rank']!, _rankMeta),
+      );
+    }
+    if (data.containsKey('total_tasks_completed')) {
+      context.handle(
+        _totalTasksCompletedMeta,
+        totalTasksCompleted.isAcceptableOrUnknown(
+          data['total_tasks_completed']!,
+          _totalTasksCompletedMeta,
         ),
       );
     }
@@ -1185,6 +1269,14 @@ class $UserProgressTableTable extends UserProgressTable
         DriftSqlType.int,
         data['${effectivePrefix}current_streak'],
       )!,
+      rank: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rank'],
+      )!,
+      totalTasksCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_tasks_completed'],
+      )!,
       lastCompletionDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}last_completion_date'],
@@ -1216,6 +1308,8 @@ class UserProgressTableData extends DataClass
   final int totalPoints;
   final int currentLevel;
   final int currentStreak;
+  final String rank;
+  final int totalTasksCompleted;
   final DateTime? lastCompletionDate;
   final bool weeklyStreakRewardClaimed;
   final DateTime createdAt;
@@ -1225,6 +1319,8 @@ class UserProgressTableData extends DataClass
     required this.totalPoints,
     required this.currentLevel,
     required this.currentStreak,
+    required this.rank,
+    required this.totalTasksCompleted,
     this.lastCompletionDate,
     required this.weeklyStreakRewardClaimed,
     required this.createdAt,
@@ -1237,6 +1333,8 @@ class UserProgressTableData extends DataClass
     map['total_points'] = Variable<int>(totalPoints);
     map['current_level'] = Variable<int>(currentLevel);
     map['current_streak'] = Variable<int>(currentStreak);
+    map['rank'] = Variable<String>(rank);
+    map['total_tasks_completed'] = Variable<int>(totalTasksCompleted);
     if (!nullToAbsent || lastCompletionDate != null) {
       map['last_completion_date'] = Variable<DateTime>(lastCompletionDate);
     }
@@ -1254,6 +1352,8 @@ class UserProgressTableData extends DataClass
       totalPoints: Value(totalPoints),
       currentLevel: Value(currentLevel),
       currentStreak: Value(currentStreak),
+      rank: Value(rank),
+      totalTasksCompleted: Value(totalTasksCompleted),
       lastCompletionDate: lastCompletionDate == null && nullToAbsent
           ? const Value.absent()
           : Value(lastCompletionDate),
@@ -1273,6 +1373,10 @@ class UserProgressTableData extends DataClass
       totalPoints: serializer.fromJson<int>(json['totalPoints']),
       currentLevel: serializer.fromJson<int>(json['currentLevel']),
       currentStreak: serializer.fromJson<int>(json['currentStreak']),
+      rank: serializer.fromJson<String>(json['rank']),
+      totalTasksCompleted: serializer.fromJson<int>(
+        json['totalTasksCompleted'],
+      ),
       lastCompletionDate: serializer.fromJson<DateTime?>(
         json['lastCompletionDate'],
       ),
@@ -1291,6 +1395,8 @@ class UserProgressTableData extends DataClass
       'totalPoints': serializer.toJson<int>(totalPoints),
       'currentLevel': serializer.toJson<int>(currentLevel),
       'currentStreak': serializer.toJson<int>(currentStreak),
+      'rank': serializer.toJson<String>(rank),
+      'totalTasksCompleted': serializer.toJson<int>(totalTasksCompleted),
       'lastCompletionDate': serializer.toJson<DateTime?>(lastCompletionDate),
       'weeklyStreakRewardClaimed': serializer.toJson<bool>(
         weeklyStreakRewardClaimed,
@@ -1305,6 +1411,8 @@ class UserProgressTableData extends DataClass
     int? totalPoints,
     int? currentLevel,
     int? currentStreak,
+    String? rank,
+    int? totalTasksCompleted,
     Value<DateTime?> lastCompletionDate = const Value.absent(),
     bool? weeklyStreakRewardClaimed,
     DateTime? createdAt,
@@ -1314,6 +1422,8 @@ class UserProgressTableData extends DataClass
     totalPoints: totalPoints ?? this.totalPoints,
     currentLevel: currentLevel ?? this.currentLevel,
     currentStreak: currentStreak ?? this.currentStreak,
+    rank: rank ?? this.rank,
+    totalTasksCompleted: totalTasksCompleted ?? this.totalTasksCompleted,
     lastCompletionDate: lastCompletionDate.present
         ? lastCompletionDate.value
         : this.lastCompletionDate,
@@ -1334,6 +1444,10 @@ class UserProgressTableData extends DataClass
       currentStreak: data.currentStreak.present
           ? data.currentStreak.value
           : this.currentStreak,
+      rank: data.rank.present ? data.rank.value : this.rank,
+      totalTasksCompleted: data.totalTasksCompleted.present
+          ? data.totalTasksCompleted.value
+          : this.totalTasksCompleted,
       lastCompletionDate: data.lastCompletionDate.present
           ? data.lastCompletionDate.value
           : this.lastCompletionDate,
@@ -1352,6 +1466,8 @@ class UserProgressTableData extends DataClass
           ..write('totalPoints: $totalPoints, ')
           ..write('currentLevel: $currentLevel, ')
           ..write('currentStreak: $currentStreak, ')
+          ..write('rank: $rank, ')
+          ..write('totalTasksCompleted: $totalTasksCompleted, ')
           ..write('lastCompletionDate: $lastCompletionDate, ')
           ..write('weeklyStreakRewardClaimed: $weeklyStreakRewardClaimed, ')
           ..write('createdAt: $createdAt, ')
@@ -1366,6 +1482,8 @@ class UserProgressTableData extends DataClass
     totalPoints,
     currentLevel,
     currentStreak,
+    rank,
+    totalTasksCompleted,
     lastCompletionDate,
     weeklyStreakRewardClaimed,
     createdAt,
@@ -1379,6 +1497,8 @@ class UserProgressTableData extends DataClass
           other.totalPoints == this.totalPoints &&
           other.currentLevel == this.currentLevel &&
           other.currentStreak == this.currentStreak &&
+          other.rank == this.rank &&
+          other.totalTasksCompleted == this.totalTasksCompleted &&
           other.lastCompletionDate == this.lastCompletionDate &&
           other.weeklyStreakRewardClaimed == this.weeklyStreakRewardClaimed &&
           other.createdAt == this.createdAt &&
@@ -1391,6 +1511,8 @@ class UserProgressTableCompanion
   final Value<int> totalPoints;
   final Value<int> currentLevel;
   final Value<int> currentStreak;
+  final Value<String> rank;
+  final Value<int> totalTasksCompleted;
   final Value<DateTime?> lastCompletionDate;
   final Value<bool> weeklyStreakRewardClaimed;
   final Value<DateTime> createdAt;
@@ -1400,6 +1522,8 @@ class UserProgressTableCompanion
     this.totalPoints = const Value.absent(),
     this.currentLevel = const Value.absent(),
     this.currentStreak = const Value.absent(),
+    this.rank = const Value.absent(),
+    this.totalTasksCompleted = const Value.absent(),
     this.lastCompletionDate = const Value.absent(),
     this.weeklyStreakRewardClaimed = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1410,6 +1534,8 @@ class UserProgressTableCompanion
     this.totalPoints = const Value.absent(),
     this.currentLevel = const Value.absent(),
     this.currentStreak = const Value.absent(),
+    this.rank = const Value.absent(),
+    this.totalTasksCompleted = const Value.absent(),
     this.lastCompletionDate = const Value.absent(),
     this.weeklyStreakRewardClaimed = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1420,6 +1546,8 @@ class UserProgressTableCompanion
     Expression<int>? totalPoints,
     Expression<int>? currentLevel,
     Expression<int>? currentStreak,
+    Expression<String>? rank,
+    Expression<int>? totalTasksCompleted,
     Expression<DateTime>? lastCompletionDate,
     Expression<bool>? weeklyStreakRewardClaimed,
     Expression<DateTime>? createdAt,
@@ -1430,6 +1558,9 @@ class UserProgressTableCompanion
       if (totalPoints != null) 'total_points': totalPoints,
       if (currentLevel != null) 'current_level': currentLevel,
       if (currentStreak != null) 'current_streak': currentStreak,
+      if (rank != null) 'rank': rank,
+      if (totalTasksCompleted != null)
+        'total_tasks_completed': totalTasksCompleted,
       if (lastCompletionDate != null)
         'last_completion_date': lastCompletionDate,
       if (weeklyStreakRewardClaimed != null)
@@ -1444,6 +1575,8 @@ class UserProgressTableCompanion
     Value<int>? totalPoints,
     Value<int>? currentLevel,
     Value<int>? currentStreak,
+    Value<String>? rank,
+    Value<int>? totalTasksCompleted,
     Value<DateTime?>? lastCompletionDate,
     Value<bool>? weeklyStreakRewardClaimed,
     Value<DateTime>? createdAt,
@@ -1454,6 +1587,8 @@ class UserProgressTableCompanion
       totalPoints: totalPoints ?? this.totalPoints,
       currentLevel: currentLevel ?? this.currentLevel,
       currentStreak: currentStreak ?? this.currentStreak,
+      rank: rank ?? this.rank,
+      totalTasksCompleted: totalTasksCompleted ?? this.totalTasksCompleted,
       lastCompletionDate: lastCompletionDate ?? this.lastCompletionDate,
       weeklyStreakRewardClaimed:
           weeklyStreakRewardClaimed ?? this.weeklyStreakRewardClaimed,
@@ -1476,6 +1611,12 @@ class UserProgressTableCompanion
     }
     if (currentStreak.present) {
       map['current_streak'] = Variable<int>(currentStreak.value);
+    }
+    if (rank.present) {
+      map['rank'] = Variable<String>(rank.value);
+    }
+    if (totalTasksCompleted.present) {
+      map['total_tasks_completed'] = Variable<int>(totalTasksCompleted.value);
     }
     if (lastCompletionDate.present) {
       map['last_completion_date'] = Variable<DateTime>(
@@ -1503,10 +1644,217 @@ class UserProgressTableCompanion
           ..write('totalPoints: $totalPoints, ')
           ..write('currentLevel: $currentLevel, ')
           ..write('currentStreak: $currentStreak, ')
+          ..write('rank: $rank, ')
+          ..write('totalTasksCompleted: $totalTasksCompleted, ')
           ..write('lastCompletionDate: $lastCompletionDate, ')
           ..write('weeklyStreakRewardClaimed: $weeklyStreakRewardClaimed, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LevelConfigTableTable extends LevelConfigTable
+    with TableInfo<$LevelConfigTableTable, LevelConfigTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LevelConfigTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _levelMeta = const VerificationMeta('level');
+  @override
+  late final GeneratedColumn<int> level = GeneratedColumn<int>(
+    'level',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _xpRequiredMeta = const VerificationMeta(
+    'xpRequired',
+  );
+  @override
+  late final GeneratedColumn<int> xpRequired = GeneratedColumn<int>(
+    'xp_required',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [level, xpRequired];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'level_config_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LevelConfigTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('level')) {
+      context.handle(
+        _levelMeta,
+        level.isAcceptableOrUnknown(data['level']!, _levelMeta),
+      );
+    }
+    if (data.containsKey('xp_required')) {
+      context.handle(
+        _xpRequiredMeta,
+        xpRequired.isAcceptableOrUnknown(data['xp_required']!, _xpRequiredMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_xpRequiredMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {level};
+  @override
+  LevelConfigTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LevelConfigTableData(
+      level: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}level'],
+      )!,
+      xpRequired: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}xp_required'],
+      )!,
+    );
+  }
+
+  @override
+  $LevelConfigTableTable createAlias(String alias) {
+    return $LevelConfigTableTable(attachedDatabase, alias);
+  }
+}
+
+class LevelConfigTableData extends DataClass
+    implements Insertable<LevelConfigTableData> {
+  final int level;
+  final int xpRequired;
+  const LevelConfigTableData({required this.level, required this.xpRequired});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['level'] = Variable<int>(level);
+    map['xp_required'] = Variable<int>(xpRequired);
+    return map;
+  }
+
+  LevelConfigTableCompanion toCompanion(bool nullToAbsent) {
+    return LevelConfigTableCompanion(
+      level: Value(level),
+      xpRequired: Value(xpRequired),
+    );
+  }
+
+  factory LevelConfigTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LevelConfigTableData(
+      level: serializer.fromJson<int>(json['level']),
+      xpRequired: serializer.fromJson<int>(json['xpRequired']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'level': serializer.toJson<int>(level),
+      'xpRequired': serializer.toJson<int>(xpRequired),
+    };
+  }
+
+  LevelConfigTableData copyWith({int? level, int? xpRequired}) =>
+      LevelConfigTableData(
+        level: level ?? this.level,
+        xpRequired: xpRequired ?? this.xpRequired,
+      );
+  LevelConfigTableData copyWithCompanion(LevelConfigTableCompanion data) {
+    return LevelConfigTableData(
+      level: data.level.present ? data.level.value : this.level,
+      xpRequired: data.xpRequired.present
+          ? data.xpRequired.value
+          : this.xpRequired,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LevelConfigTableData(')
+          ..write('level: $level, ')
+          ..write('xpRequired: $xpRequired')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(level, xpRequired);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LevelConfigTableData &&
+          other.level == this.level &&
+          other.xpRequired == this.xpRequired);
+}
+
+class LevelConfigTableCompanion extends UpdateCompanion<LevelConfigTableData> {
+  final Value<int> level;
+  final Value<int> xpRequired;
+  const LevelConfigTableCompanion({
+    this.level = const Value.absent(),
+    this.xpRequired = const Value.absent(),
+  });
+  LevelConfigTableCompanion.insert({
+    this.level = const Value.absent(),
+    required int xpRequired,
+  }) : xpRequired = Value(xpRequired);
+  static Insertable<LevelConfigTableData> custom({
+    Expression<int>? level,
+    Expression<int>? xpRequired,
+  }) {
+    return RawValuesInsertable({
+      if (level != null) 'level': level,
+      if (xpRequired != null) 'xp_required': xpRequired,
+    });
+  }
+
+  LevelConfigTableCompanion copyWith({
+    Value<int>? level,
+    Value<int>? xpRequired,
+  }) {
+    return LevelConfigTableCompanion(
+      level: level ?? this.level,
+      xpRequired: xpRequired ?? this.xpRequired,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (level.present) {
+      map['level'] = Variable<int>(level.value);
+    }
+    if (xpRequired.present) {
+      map['xp_required'] = Variable<int>(xpRequired.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LevelConfigTableCompanion(')
+          ..write('level: $level, ')
+          ..write('xpRequired: $xpRequired')
           ..write(')'))
         .toString();
   }
@@ -1520,11 +1868,17 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $TaskCategoriesTableTable(this);
   late final $UserProgressTableTable userProgressTable =
       $UserProgressTableTable(this);
+  late final $LevelConfigTableTable levelConfigTable = $LevelConfigTableTable(
+    this,
+  );
   late final NoteDao noteDao = NoteDao(this as AppDatabase);
   late final TaskCategoryDao taskCategoryDao = TaskCategoryDao(
     this as AppDatabase,
   );
   late final UserProgressDao userProgressDao = UserProgressDao(
+    this as AppDatabase,
+  );
+  late final LevelConfigDao levelConfigDao = LevelConfigDao(
     this as AppDatabase,
   );
   @override
@@ -1535,6 +1889,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     noteTable,
     taskCategoriesTable,
     userProgressTable,
+    levelConfigTable,
   ];
 }
 
@@ -1550,6 +1905,7 @@ typedef $$NoteTableTableCreateCompanionBuilder =
       Value<Priority> priority,
       Value<String?> taskType,
       Value<TaskDifficulty> difficulty,
+      Value<int> xpValue,
     });
 typedef $$NoteTableTableUpdateCompanionBuilder =
     NoteTableCompanion Function({
@@ -1563,6 +1919,7 @@ typedef $$NoteTableTableUpdateCompanionBuilder =
       Value<Priority> priority,
       Value<String?> taskType,
       Value<TaskDifficulty> difficulty,
+      Value<int> xpValue,
     });
 
 class $$NoteTableTableFilterComposer
@@ -1625,6 +1982,11 @@ class $$NoteTableTableFilterComposer
     column: $table.difficulty,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
+
+  ColumnFilters<int> get xpValue => $composableBuilder(
+    column: $table.xpValue,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$NoteTableTableOrderingComposer
@@ -1685,6 +2047,11 @@ class $$NoteTableTableOrderingComposer
     column: $table.difficulty,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get xpValue => $composableBuilder(
+    column: $table.xpValue,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$NoteTableTableAnnotationComposer
@@ -1732,6 +2099,9 @@ class $$NoteTableTableAnnotationComposer
         column: $table.difficulty,
         builder: (column) => column,
       );
+
+  GeneratedColumn<int> get xpValue =>
+      $composableBuilder(column: $table.xpValue, builder: (column) => column);
 }
 
 class $$NoteTableTableTableManager
@@ -1775,6 +2145,7 @@ class $$NoteTableTableTableManager
                 Value<Priority> priority = const Value.absent(),
                 Value<String?> taskType = const Value.absent(),
                 Value<TaskDifficulty> difficulty = const Value.absent(),
+                Value<int> xpValue = const Value.absent(),
               }) => NoteTableCompanion(
                 id: id,
                 title: title,
@@ -1786,6 +2157,7 @@ class $$NoteTableTableTableManager
                 priority: priority,
                 taskType: taskType,
                 difficulty: difficulty,
+                xpValue: xpValue,
               ),
           createCompanionCallback:
               ({
@@ -1799,6 +2171,7 @@ class $$NoteTableTableTableManager
                 Value<Priority> priority = const Value.absent(),
                 Value<String?> taskType = const Value.absent(),
                 Value<TaskDifficulty> difficulty = const Value.absent(),
+                Value<int> xpValue = const Value.absent(),
               }) => NoteTableCompanion.insert(
                 id: id,
                 title: title,
@@ -1810,6 +2183,7 @@ class $$NoteTableTableTableManager
                 priority: priority,
                 taskType: taskType,
                 difficulty: difficulty,
+                xpValue: xpValue,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -2052,6 +2426,8 @@ typedef $$UserProgressTableTableCreateCompanionBuilder =
       Value<int> totalPoints,
       Value<int> currentLevel,
       Value<int> currentStreak,
+      Value<String> rank,
+      Value<int> totalTasksCompleted,
       Value<DateTime?> lastCompletionDate,
       Value<bool> weeklyStreakRewardClaimed,
       Value<DateTime> createdAt,
@@ -2063,6 +2439,8 @@ typedef $$UserProgressTableTableUpdateCompanionBuilder =
       Value<int> totalPoints,
       Value<int> currentLevel,
       Value<int> currentStreak,
+      Value<String> rank,
+      Value<int> totalTasksCompleted,
       Value<DateTime?> lastCompletionDate,
       Value<bool> weeklyStreakRewardClaimed,
       Value<DateTime> createdAt,
@@ -2095,6 +2473,16 @@ class $$UserProgressTableTableFilterComposer
 
   ColumnFilters<int> get currentStreak => $composableBuilder(
     column: $table.currentStreak,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rank => $composableBuilder(
+    column: $table.rank,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalTasksCompleted => $composableBuilder(
+    column: $table.totalTasksCompleted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2148,6 +2536,16 @@ class $$UserProgressTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get rank => $composableBuilder(
+    column: $table.rank,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalTasksCompleted => $composableBuilder(
+    column: $table.totalTasksCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get lastCompletionDate => $composableBuilder(
     column: $table.lastCompletionDate,
     builder: (column) => ColumnOrderings(column),
@@ -2193,6 +2591,14 @@ class $$UserProgressTableTableAnnotationComposer
 
   GeneratedColumn<int> get currentStreak => $composableBuilder(
     column: $table.currentStreak,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rank =>
+      $composableBuilder(column: $table.rank, builder: (column) => column);
+
+  GeneratedColumn<int> get totalTasksCompleted => $composableBuilder(
+    column: $table.totalTasksCompleted,
     builder: (column) => column,
   );
 
@@ -2257,6 +2663,8 @@ class $$UserProgressTableTableTableManager
                 Value<int> totalPoints = const Value.absent(),
                 Value<int> currentLevel = const Value.absent(),
                 Value<int> currentStreak = const Value.absent(),
+                Value<String> rank = const Value.absent(),
+                Value<int> totalTasksCompleted = const Value.absent(),
                 Value<DateTime?> lastCompletionDate = const Value.absent(),
                 Value<bool> weeklyStreakRewardClaimed = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -2266,6 +2674,8 @@ class $$UserProgressTableTableTableManager
                 totalPoints: totalPoints,
                 currentLevel: currentLevel,
                 currentStreak: currentStreak,
+                rank: rank,
+                totalTasksCompleted: totalTasksCompleted,
                 lastCompletionDate: lastCompletionDate,
                 weeklyStreakRewardClaimed: weeklyStreakRewardClaimed,
                 createdAt: createdAt,
@@ -2277,6 +2687,8 @@ class $$UserProgressTableTableTableManager
                 Value<int> totalPoints = const Value.absent(),
                 Value<int> currentLevel = const Value.absent(),
                 Value<int> currentStreak = const Value.absent(),
+                Value<String> rank = const Value.absent(),
+                Value<int> totalTasksCompleted = const Value.absent(),
                 Value<DateTime?> lastCompletionDate = const Value.absent(),
                 Value<bool> weeklyStreakRewardClaimed = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -2286,6 +2698,8 @@ class $$UserProgressTableTableTableManager
                 totalPoints: totalPoints,
                 currentLevel: currentLevel,
                 currentStreak: currentStreak,
+                rank: rank,
+                totalTasksCompleted: totalTasksCompleted,
                 lastCompletionDate: lastCompletionDate,
                 weeklyStreakRewardClaimed: weeklyStreakRewardClaimed,
                 createdAt: createdAt,
@@ -2320,6 +2734,155 @@ typedef $$UserProgressTableTableProcessedTableManager =
       UserProgressTableData,
       PrefetchHooks Function()
     >;
+typedef $$LevelConfigTableTableCreateCompanionBuilder =
+    LevelConfigTableCompanion Function({
+      Value<int> level,
+      required int xpRequired,
+    });
+typedef $$LevelConfigTableTableUpdateCompanionBuilder =
+    LevelConfigTableCompanion Function({
+      Value<int> level,
+      Value<int> xpRequired,
+    });
+
+class $$LevelConfigTableTableFilterComposer
+    extends Composer<_$AppDatabase, $LevelConfigTableTable> {
+  $$LevelConfigTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get level => $composableBuilder(
+    column: $table.level,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get xpRequired => $composableBuilder(
+    column: $table.xpRequired,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LevelConfigTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $LevelConfigTableTable> {
+  $$LevelConfigTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get level => $composableBuilder(
+    column: $table.level,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get xpRequired => $composableBuilder(
+    column: $table.xpRequired,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LevelConfigTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LevelConfigTableTable> {
+  $$LevelConfigTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get level =>
+      $composableBuilder(column: $table.level, builder: (column) => column);
+
+  GeneratedColumn<int> get xpRequired => $composableBuilder(
+    column: $table.xpRequired,
+    builder: (column) => column,
+  );
+}
+
+class $$LevelConfigTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LevelConfigTableTable,
+          LevelConfigTableData,
+          $$LevelConfigTableTableFilterComposer,
+          $$LevelConfigTableTableOrderingComposer,
+          $$LevelConfigTableTableAnnotationComposer,
+          $$LevelConfigTableTableCreateCompanionBuilder,
+          $$LevelConfigTableTableUpdateCompanionBuilder,
+          (
+            LevelConfigTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $LevelConfigTableTable,
+              LevelConfigTableData
+            >,
+          ),
+          LevelConfigTableData,
+          PrefetchHooks Function()
+        > {
+  $$LevelConfigTableTableTableManager(
+    _$AppDatabase db,
+    $LevelConfigTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LevelConfigTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LevelConfigTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LevelConfigTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> level = const Value.absent(),
+                Value<int> xpRequired = const Value.absent(),
+              }) => LevelConfigTableCompanion(
+                level: level,
+                xpRequired: xpRequired,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> level = const Value.absent(),
+                required int xpRequired,
+              }) => LevelConfigTableCompanion.insert(
+                level: level,
+                xpRequired: xpRequired,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LevelConfigTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LevelConfigTableTable,
+      LevelConfigTableData,
+      $$LevelConfigTableTableFilterComposer,
+      $$LevelConfigTableTableOrderingComposer,
+      $$LevelConfigTableTableAnnotationComposer,
+      $$LevelConfigTableTableCreateCompanionBuilder,
+      $$LevelConfigTableTableUpdateCompanionBuilder,
+      (
+        LevelConfigTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $LevelConfigTableTable,
+          LevelConfigTableData
+        >,
+      ),
+      LevelConfigTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2330,6 +2893,8 @@ class $AppDatabaseManager {
       $$TaskCategoriesTableTableTableManager(_db, _db.taskCategoriesTable);
   $$UserProgressTableTableTableManager get userProgressTable =>
       $$UserProgressTableTableTableManager(_db, _db.userProgressTable);
+  $$LevelConfigTableTableTableManager get levelConfigTable =>
+      $$LevelConfigTableTableTableManager(_db, _db.levelConfigTable);
 }
 
 // **************************************************************************

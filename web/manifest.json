@@ -1,11 +1,11 @@
 {
-    "name": "Ascend",
-    "short_name": "Ascend",
+    "name": "SoloLeveling",
+    "short_name": "SoloLeveling",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Ascend: Task manager and daily planner.",
+    "description": "SoloLeveling: Task manager, habit tracker, and daily planner.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

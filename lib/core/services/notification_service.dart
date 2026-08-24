@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:ascend/main.dart';
+import 'package:solo_leveling/main.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();

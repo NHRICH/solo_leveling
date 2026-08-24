@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/data/db/tables/note_table.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'note_dao.g.dart';

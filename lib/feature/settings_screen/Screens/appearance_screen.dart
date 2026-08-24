@@ -1,11 +1,11 @@
 // import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/core/theme/theme_provider.dart';
-import 'package:ascend/core/theme/app_themes.dart';
-import 'package:ascend/feature/settings_screen/widgets/theme_preview_card.dart';
-import 'package:ascend/feature/settings_screen/widgets/common_setting_tile.dart';
-import 'package:ascend/feature/settings_screen/widgets/theme_mode_dropdown.dart';
+import 'package:solo_leveling/core/theme/theme_provider.dart';
+import 'package:solo_leveling/core/theme/app_themes.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/theme_preview_card.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/common_setting_tile.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/theme_mode_dropdown.dart';
 
 class AppearanceScreen extends ConsumerWidget {
   const AppearanceScreen({super.key});

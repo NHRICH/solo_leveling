@@ -14,18 +14,17 @@ class MotivationConstants {
 }
 
 class AppConstants {
-  static const String appName = 'Ascend';
+  static const String appName = 'SoloLeveling';
   static const String appVersion = '1.0.0';
-  static const String versionName = 'Ascend v1.0.0';
+  static const String versionName = 'SoloLeveling v1.0.0';
 
   // URLs
   static const String discordUrl = 'https://discord.gg/SqDNVhhdHV';
   static const String githubUrl =
-      'https://github.com/onimusha-dev/simple-task-manager-app';
+      'https://github.com/sololeveling-dev/solo-leveling-app';
   static const String telegramUrl = 'https://t.me/+3sRfr-qGQ4BkZDRl';
-  static const String websiteUrl = 'https://onimusha-dev.github.io/Ascend';
-  static const String email = 'musaddik.dev@gmail.com';
-  static const String author = '鬼 musha';
+  static const String websiteUrl = 'https://sololeveling-dev.github.io/SoloLeveling';
+  static const String email = 'sololeveling.dev@gmail.com';
 }
 
 class DatabaseConstants {

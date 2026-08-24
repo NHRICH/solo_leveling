@@ -164,7 +164,7 @@ class _ShownotesState extends ConsumerState<Shownotes> {
                           Icon(
                             Icons.access_time_rounded,
                             size: 16,
-                            color: textColor.withOpacity(0.5),
+                            color: textColor.withValues(alpha: 0.5),
                           ),
                           const SizedBox(width: 6),
                           Text(
@@ -172,14 +172,14 @@ class _ShownotesState extends ConsumerState<Shownotes> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: textColor.withOpacity(0.5),
+                              color: textColor.withValues(alpha: 0.5),
                             ),
                           ),
                           const SizedBox(width: 20),
                           Icon(
                             Icons.auto_awesome_rounded,
                             size: 16,
-                            color: textColor.withOpacity(0.5),
+                            color: textColor.withValues(alpha: 0.5),
                           ),
                           const SizedBox(width: 6),
                           Text(
@@ -187,7 +187,7 @@ class _ShownotesState extends ConsumerState<Shownotes> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: textColor.withOpacity(0.5),
+                              color: textColor.withValues(alpha: 0.5),
                             ),
                           ),
                         ],
@@ -233,7 +233,7 @@ class _ShownotesState extends ConsumerState<Shownotes> {
                           widget.description,
                           style: TextStyle(
                             fontSize: 14,
-                            color: textColor.withOpacity(0.8),
+                            color: textColor.withValues(alpha: 0.8),
                           ),
                         ),
                       ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ascend/feature/settings_screen/Screens/account_screen/widgets/user_profile_card.dart';
-import 'package:ascend/feature/settings_screen/widgets/common_setting_tile.dart';
-import 'package:ascend/core/services/auth_service.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/account_screen/widgets/user_profile_card.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/common_setting_tile.dart';
+import 'package:solo_leveling/core/services/auth_service.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});

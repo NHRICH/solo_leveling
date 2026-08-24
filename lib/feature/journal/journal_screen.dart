@@ -1,13 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
+import 'package:solo_leveling/feature/tasks/view_models/note_view_model.dart';
+import 'package:solo_leveling/domain/models/note_model.dart';
 
-class JournalScreen extends StatelessWidget {
+class JournalScreen extends ConsumerStatefulWidget {
   const JournalScreen({super.key});
+
+  @override
+  ConsumerState<JournalScreen> createState() => _JournalScreenState();
+}
+
+class _JournalScreenState extends ConsumerState<JournalScreen> {
+  final TextEditingController _journalController = TextEditingController();
+
+  @override
+  void dispose() {
+    _journalController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveEntry() async {
+    final text = _journalController.text.trim();
+    if (text.isEmpty) return;
+
+    await ref
+        .read(noteViewModelProvider.notifier)
+        .insertNote(
+          text, // title
+          null, // description
+          null, // dueDate
+          null, // priority
+          TaskDifficulty.easy, // difficulty
+          null, // taskType
+        );
+
+    _journalController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final noteState = ref.watch(noteViewModelProvider);
+    final notes = noteState.notes;
+
+    // Filter notes that look like journal entries (no due date, easy difficulty)
+    final journalEntries = notes
+        .where((n) => n.dueDate == null)
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -15,37 +58,27 @@ class JournalScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 150,
+            expandedHeight: 120,
             backgroundColor: theme.scaffoldBackgroundColor,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [cs.tertiaryContainer.withAlpha(100), Colors.transparent],
+                    colors: [
+                      cs.tertiaryContainer.withAlpha(100),
+                      Colors.transparent,
+                    ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
                 ),
               ),
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Daily Journal',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: cs.onSurface,
-                    ),
-                  ),
-                  Text(
-                    'Write your thoughts...',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: cs.onSurfaceVariant,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
+              title: Text(
+                'System Journal',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: cs.onSurface,
+                ),
               ),
               centerTitle: false,
               titlePadding: const EdgeInsets.only(left: 24, bottom: 16),
@@ -57,11 +90,21 @@ class JournalScreen extends StatelessWidget {
               delegate: SliverChildListDelegate([
                 _buildJournalInput(context),
                 const SizedBox(height: 32),
-                _buildSectionLabel(context, "Past Reflections"),
+                _buildSectionLabel(context, "Quest Log"),
                 const SizedBox(height: 16),
-                _buildJournalCard(context, "A Productive Morning", "Started early today and finished all major tasks before noon. Feeling energized!", "2 hours ago"),
-                _buildJournalCard(context, "Grateful for Friends", "Had a great coffee chat with Sarah. It's important to take breaks.", "Yesterday"),
-                _buildJournalCard(context, "Overcoming Challenges", "The complex bug in the backend is finally fixed. Persistence pays off.", "2 days ago"),
+                if (noteState.isLoading && journalEntries.isEmpty)
+                  const Center(child: CircularProgressIndicator())
+                else if (journalEntries.isEmpty)
+                  _buildEmptyState(context)
+                else
+                  ...journalEntries.map(
+                    (note) => _buildJournalCard(
+                      context,
+                      note.title,
+                      note.description ?? '',
+                      formatDateAndTimeDifference(note.createdAt),
+                    ),
+                  ),
                 const SizedBox(height: 100),
               ]),
             ),
@@ -90,25 +133,36 @@ class JournalScreen extends StatelessWidget {
       child: Column(
         children: [
           TextField(
+            controller: _journalController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: "How's your day going?",
-              hintStyle: TextStyle(color: cs.onSurfaceVariant.withAlpha(100)),
+              hintText: "Record your daily quest notes...",
+              hintStyle: TextStyle(
+                color: cs.onSurfaceVariant.withAlpha(100),
+              ),
               border: InputBorder.none,
             ),
           ),
           const Divider(),
           Row(
             children: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.image_outlined)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.emoji_emotions_outlined)),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.image_outlined),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.emoji_emotions_outlined),
+              ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: _saveEntry,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: cs.primary,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
                 child: const Text('Save Entry'),
               ),
@@ -130,7 +184,12 @@ class JournalScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildJournalCard(BuildContext context, String title, String content, String time) {
+  Widget _buildJournalCard(
+    BuildContext context,
+    String title,
+    String content,
+    String time,
+  ) {
     final cs = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -169,5 +228,37 @@ class JournalScreen extends StatelessWidget {
         ],
       ),
     ).animate().fadeIn(delay: 100.ms).slideX(begin: 0.05, end: 0);
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.book_outlined,
+            size: 64,
+            color: cs.primary.withAlpha(80),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            "No quests recorded yet",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: cs.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Document your daily adventures to track your growth.",
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: cs.onSurfaceVariant.withAlpha(150),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 }

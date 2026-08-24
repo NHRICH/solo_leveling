@@ -1,6 +1,6 @@
-# App Styling Guide
+# SoloLeveling App Styling Guide
 
-This document describes the design system and styling standards used in this application.
+This document describes the design system and styling standards used in the SoloLeveling application.
 
 ## Typography
 

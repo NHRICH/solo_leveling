@@ -3,13 +3,13 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:ascend/core/theme/theme_provider.dart';
-import 'package:ascend/feature/error_screen/global_error_screen.dart';
-import 'package:ascend/core/services/app_preferences.dart';
-import 'package:ascend/core/services/analytics_service.dart';
-import 'package:ascend/feature/onboarding/onboarding_screen.dart';
-import 'package:ascend/main_app_screen.dart';
-import 'package:ascend/core/services/background_service.dart';
+import 'package:solo_leveling/core/theme/theme_provider.dart';
+import 'package:solo_leveling/feature/error_screen/global_error_screen.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
+import 'package:solo_leveling/core/services/analytics_service.dart';
+import 'package:solo_leveling/feature/onboarding/onboarding_screen.dart';
+import 'package:solo_leveling/main_app_screen.dart';
+import 'package:solo_leveling/core/services/background_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

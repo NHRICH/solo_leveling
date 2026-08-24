@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/core/theme/app_themes.dart';
-import 'package:ascend/core/services/app_preferences.dart';
+import 'package:solo_leveling/core/theme/app_themes.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
 
-// Theme State
 class ThemeState {
   final ThemeMode themeMode;
   final AppThemePreset preset;
@@ -29,7 +28,6 @@ class ThemeState {
   }
 }
 
-// Theme Provider
 final themeProvider = NotifierProvider<ThemeController, ThemeState>(
   () => ThemeController(),
 );
@@ -46,17 +44,17 @@ class ThemeController extends Notifier<ThemeState> {
       AppPreferences.keyThemePreset,
     );
     final pureDark =
-        AppPreferences.getPreferenceBool(AppPreferences.keyPureDark) ?? false;
+        AppPreferences.getPreferenceBool(AppPreferences.keyPureDark) ?? true;
 
     final themeMode = switch (themeStr) {
       'light' => ThemeMode.light,
       'dark' => ThemeMode.dark,
-      _ => ThemeMode.system,
+      _ => ThemeMode.dark,
     };
 
     final preset = AppThemes.presets.firstWhere(
       (p) => p.name == presetStr,
-      orElse: () => AppThemes.miku,
+      orElse: () => AppThemes.soloLeveling,
     );
 
     return ThemeState(themeMode: themeMode, preset: preset, pureDark: pureDark);
@@ -105,6 +103,9 @@ class FadePageTransitionsBuilder extends PageTransitionsBuilder {
   }
 }
 
+/// Light-mode readable text color (dark, visible on light backgrounds).
+const lightOnSurface = Color(0xFF1A1A2E);
+
 ThemeData buildTheme(
   ColorScheme colorScheme,
   Brightness brightness,
@@ -112,39 +113,64 @@ ThemeData buildTheme(
 ) {
   final isDark = brightness == Brightness.dark;
 
-  // NOTE: Calculate Background Color (Subtle tint of primary)
-  // For light: very faint tint
-  // For dark: deep dark tint, unless pureDark is true
+  final accent = SystemColors.accent;
+  final shadowViolet = SystemColors.shadowViolet;
+
   Color backgroundColor;
   Color surfaceColor;
+  Color onSurfaceColor;
+  Color appBarForegroundColor;
+  Color cardColor;
+  Color dialogBackgroundColor;
+  Color bottomSheetBackgroundColor;
+  Color snackBarBackgroundColor;
+  Brightness statusBarIconBrightness;
+  Brightness navBarIconBrightness;
 
   if (isDark) {
-    if (pureDark) {
-      backgroundColor = Colors.black;
-      surfaceColor = const Color(0xFF0A0A0A);
-    } else {
-      backgroundColor = Color.alphaBlend(
-        colorScheme.primary.withValues(alpha: 0.05),
-        const Color(0xFF0D0D12),
-      );
-      surfaceColor = Color.alphaBlend(
-        colorScheme.primary.withValues(alpha: 0.08),
-        const Color(0xFF14141E),
-      );
-    }
+    backgroundColor = SystemColors.background;
+    surfaceColor = SystemColors.surfaceElevated;
+    onSurfaceColor = SystemColors.text;
+    appBarForegroundColor = SystemColors.text;
+    cardColor = SystemColors.surface;
+    dialogBackgroundColor = SystemColors.surfaceElevated;
+    bottomSheetBackgroundColor = SystemColors.surfaceElevated;
+    snackBarBackgroundColor = SystemColors.surfaceElevated;
+    statusBarIconBrightness = Brightness.light;
+    navBarIconBrightness = Brightness.light;
   } else {
     backgroundColor = Color.alphaBlend(
-      colorScheme.primary.withValues(alpha: 0.03),
+      accent.withValues(alpha: 0.03),
       const Color(0xFFF8F9FC),
     );
     surfaceColor = Colors.white;
+    onSurfaceColor = lightOnSurface;
+    appBarForegroundColor = lightOnSurface;
+    cardColor = Colors.white;
+    dialogBackgroundColor = Colors.white;
+    bottomSheetBackgroundColor = Colors.white;
+    snackBarBackgroundColor = Colors.white;
+    statusBarIconBrightness = Brightness.dark;
+    navBarIconBrightness = Brightness.dark;
   }
 
   return ThemeData(
     useMaterial3: true,
     brightness: brightness,
-    colorScheme: colorScheme.copyWith(surface: surfaceColor),
+    colorScheme: colorScheme.copyWith(
+      primary: accent,
+      secondary: shadowViolet,
+      tertiary: shadowViolet,
+      onPrimary: const Color(0xFF002A2E),
+      onSecondary: Colors.white,
+      onTertiary: Colors.white,
+      surface: surfaceColor,
+      onSurface: onSurfaceColor,
+      outline: accent.withValues(alpha: 0.4),
+      outlineVariant: accent.withValues(alpha: 0.2),
+    ),
     scaffoldBackgroundColor: backgroundColor,
+    dividerTheme: DividerThemeData(color: accent.withValues(alpha: 0.15)),
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: <TargetPlatform, PageTransitionsBuilder>{
         TargetPlatform.android: FadePageTransitionsBuilder(),
@@ -157,44 +183,71 @@ ThemeData buildTheme(
     appBarTheme: AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness: statusBarIconBrightness,
         systemNavigationBarColor: Colors.transparent,
         systemNavigationBarDividerColor: Colors.transparent,
-        systemNavigationBarIconBrightness: isDark
-            ? Brightness.light
-            : Brightness.dark,
+        systemNavigationBarIconBrightness: navBarIconBrightness,
       ),
       centerTitle: true,
       elevation: 0,
       scrolledUnderElevation: 0,
       surfaceTintColor: Colors.transparent,
       backgroundColor: Colors.transparent,
-      foregroundColor: isDark
-          ? const Color(0xFFE8E8EE)
-          : const Color(0xFF1A1A2E),
+      foregroundColor: appBarForegroundColor,
     ),
     cardTheme: CardThemeData(
-      elevation: isDark ? 4 : 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: isDark
-          ? (pureDark ? const Color(0xFF121212) : const Color(0xFF1E1E28))
-          : Colors.white,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: accent.withValues(alpha: 0.4), width: 1),
+      ),
+      color: cardColor,
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: dialogBackgroundColor,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(color: accent.withValues(alpha: 0.5), width: 1),
+      ),
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: bottomSheetBackgroundColor,
+      surfaceTintColor: Colors.transparent,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: colorScheme.primary,
-      foregroundColor: colorScheme.onPrimary,
+      backgroundColor: accent,
+      foregroundColor: const Color(0xFF002A2E),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
+        backgroundColor: accent,
+        foregroundColor: const Color(0xFF002A2E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: snackBarBackgroundColor,
+      contentTextStyle: const TextStyle(
+        color: SystemColors.accent,
+        fontFamily: 'monospace',
+        letterSpacing: 0.5,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: accent.withValues(alpha: 0.5), width: 1),
+      ),
+    ),
+    textTheme: Typography.material2021(platform: TargetPlatform.android)
+        .black
+        .apply(
+          bodyColor: isDark ? SystemColors.text : lightOnSurface,
+          displayColor: isDark ? SystemColors.text : lightOnSurface,
+          fontFamily: 'monospace',
+        ),
   );
 }
 
-// Double Tap To Exit Provider
 final doubleTapToExitProvider =
     NotifierProvider<DoubleTapToExitController, bool>(
       () => DoubleTapToExitController(),

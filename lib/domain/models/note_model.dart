@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/data/db/tables/note_table.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
 
 part 'note_model.freezed.dart';
 
@@ -17,6 +17,7 @@ abstract class NoteModel with _$NoteModel {
     required Priority priority,
     required TaskDifficulty difficulty,
     String? taskType,
+    @Default(10) int xpValue,
   }) = _NoteModel;
 
   factory NoteModel.fromEntity(NoteTableData note) {
@@ -31,6 +32,7 @@ abstract class NoteModel with _$NoteModel {
       priority: note.priority,
       difficulty: note.difficulty,
       taskType: note.taskType,
+      xpValue: note.xpValue,
     );
   }
 }

@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProgressModel {
 
- int get id; int get totalPoints; int get currentLevel; int get currentStreak; DateTime? get lastCompletionDate; bool get weeklyStreakRewardClaimed;
+ int get id; int get totalPoints; int get currentLevel; int get currentStreak; DateTime? get lastCompletionDate; bool get weeklyStreakRewardClaimed; String get rank; int get totalTasksCompleted;// Optional configurable XP thresholds. When provided, these override the
+// static Solo Leveling formula so the user can customize XP per level.
+ int? get currentLevelXpBase; int? get nextLevelXpBase;
 /// Create a copy of UserProgressModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +27,16 @@ $UserProgressModelCopyWith<UserProgressModel> get copyWith => _$UserProgressMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProgressModel&&(identical(other.id, id) || other.id == id)&&(identical(other.totalPoints, totalPoints) || other.totalPoints == totalPoints)&&(identical(other.currentLevel, currentLevel) || other.currentLevel == currentLevel)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastCompletionDate, lastCompletionDate) || other.lastCompletionDate == lastCompletionDate)&&(identical(other.weeklyStreakRewardClaimed, weeklyStreakRewardClaimed) || other.weeklyStreakRewardClaimed == weeklyStreakRewardClaimed));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProgressModel&&(identical(other.id, id) || other.id == id)&&(identical(other.totalPoints, totalPoints) || other.totalPoints == totalPoints)&&(identical(other.currentLevel, currentLevel) || other.currentLevel == currentLevel)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastCompletionDate, lastCompletionDate) || other.lastCompletionDate == lastCompletionDate)&&(identical(other.weeklyStreakRewardClaimed, weeklyStreakRewardClaimed) || other.weeklyStreakRewardClaimed == weeklyStreakRewardClaimed)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.totalTasksCompleted, totalTasksCompleted) || other.totalTasksCompleted == totalTasksCompleted)&&(identical(other.currentLevelXpBase, currentLevelXpBase) || other.currentLevelXpBase == currentLevelXpBase)&&(identical(other.nextLevelXpBase, nextLevelXpBase) || other.nextLevelXpBase == nextLevelXpBase));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,totalPoints,currentLevel,currentStreak,lastCompletionDate,weeklyStreakRewardClaimed);
+int get hashCode => Object.hash(runtimeType,id,totalPoints,currentLevel,currentStreak,lastCompletionDate,weeklyStreakRewardClaimed,rank,totalTasksCompleted,currentLevelXpBase,nextLevelXpBase);
 
 @override
 String toString() {
-  return 'UserProgressModel(id: $id, totalPoints: $totalPoints, currentLevel: $currentLevel, currentStreak: $currentStreak, lastCompletionDate: $lastCompletionDate, weeklyStreakRewardClaimed: $weeklyStreakRewardClaimed)';
+  return 'UserProgressModel(id: $id, totalPoints: $totalPoints, currentLevel: $currentLevel, currentStreak: $currentStreak, lastCompletionDate: $lastCompletionDate, weeklyStreakRewardClaimed: $weeklyStreakRewardClaimed, rank: $rank, totalTasksCompleted: $totalTasksCompleted, currentLevelXpBase: $currentLevelXpBase, nextLevelXpBase: $nextLevelXpBase)';
 }
 
 
@@ -45,7 +47,7 @@ abstract mixin class $UserProgressModelCopyWith<$Res>  {
   factory $UserProgressModelCopyWith(UserProgressModel value, $Res Function(UserProgressModel) _then) = _$UserProgressModelCopyWithImpl;
 @useResult
 $Res call({
- int id, int totalPoints, int currentLevel, int currentStreak, DateTime? lastCompletionDate, bool weeklyStreakRewardClaimed
+ int id, int totalPoints, int currentLevel, int currentStreak, DateTime? lastCompletionDate, bool weeklyStreakRewardClaimed, String rank, int totalTasksCompleted, int? currentLevelXpBase, int? nextLevelXpBase
 });
 
 
@@ -62,7 +64,7 @@ class _$UserProgressModelCopyWithImpl<$Res>
 
 /// Create a copy of UserProgressModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? totalPoints = null,Object? currentLevel = null,Object? currentStreak = null,Object? lastCompletionDate = freezed,Object? weeklyStreakRewardClaimed = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? totalPoints = null,Object? currentLevel = null,Object? currentStreak = null,Object? lastCompletionDate = freezed,Object? weeklyStreakRewardClaimed = null,Object? rank = null,Object? totalTasksCompleted = null,Object? currentLevelXpBase = freezed,Object? nextLevelXpBase = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,totalPoints: null == totalPoints ? _self.totalPoints : totalPoints // ignore: cast_nullable_to_non_nullable
@@ -70,7 +72,11 @@ as int,currentLevel: null == currentLevel ? _self.currentLevel : currentLevel //
 as int,currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
 as int,lastCompletionDate: freezed == lastCompletionDate ? _self.lastCompletionDate : lastCompletionDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,weeklyStreakRewardClaimed: null == weeklyStreakRewardClaimed ? _self.weeklyStreakRewardClaimed : weeklyStreakRewardClaimed // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,rank: null == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
+as String,totalTasksCompleted: null == totalTasksCompleted ? _self.totalTasksCompleted : totalTasksCompleted // ignore: cast_nullable_to_non_nullable
+as int,currentLevelXpBase: freezed == currentLevelXpBase ? _self.currentLevelXpBase : currentLevelXpBase // ignore: cast_nullable_to_non_nullable
+as int?,nextLevelXpBase: freezed == nextLevelXpBase ? _self.nextLevelXpBase : nextLevelXpBase // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -155,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int totalPoints,  int currentLevel,  int currentStreak,  DateTime? lastCompletionDate,  bool weeklyStreakRewardClaimed)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int totalPoints,  int currentLevel,  int currentStreak,  DateTime? lastCompletionDate,  bool weeklyStreakRewardClaimed,  String rank,  int totalTasksCompleted,  int? currentLevelXpBase,  int? nextLevelXpBase)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProgressModel() when $default != null:
-return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStreak,_that.lastCompletionDate,_that.weeklyStreakRewardClaimed);case _:
+return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStreak,_that.lastCompletionDate,_that.weeklyStreakRewardClaimed,_that.rank,_that.totalTasksCompleted,_that.currentLevelXpBase,_that.nextLevelXpBase);case _:
   return orElse();
 
 }
@@ -176,10 +182,10 @@ return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStrea
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int totalPoints,  int currentLevel,  int currentStreak,  DateTime? lastCompletionDate,  bool weeklyStreakRewardClaimed)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int totalPoints,  int currentLevel,  int currentStreak,  DateTime? lastCompletionDate,  bool weeklyStreakRewardClaimed,  String rank,  int totalTasksCompleted,  int? currentLevelXpBase,  int? nextLevelXpBase)  $default,) {final _that = this;
 switch (_that) {
 case _UserProgressModel():
-return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStreak,_that.lastCompletionDate,_that.weeklyStreakRewardClaimed);case _:
+return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStreak,_that.lastCompletionDate,_that.weeklyStreakRewardClaimed,_that.rank,_that.totalTasksCompleted,_that.currentLevelXpBase,_that.nextLevelXpBase);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +202,10 @@ return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStrea
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int totalPoints,  int currentLevel,  int currentStreak,  DateTime? lastCompletionDate,  bool weeklyStreakRewardClaimed)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int totalPoints,  int currentLevel,  int currentStreak,  DateTime? lastCompletionDate,  bool weeklyStreakRewardClaimed,  String rank,  int totalTasksCompleted,  int? currentLevelXpBase,  int? nextLevelXpBase)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProgressModel() when $default != null:
-return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStreak,_that.lastCompletionDate,_that.weeklyStreakRewardClaimed);case _:
+return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStreak,_that.lastCompletionDate,_that.weeklyStreakRewardClaimed,_that.rank,_that.totalTasksCompleted,_that.currentLevelXpBase,_that.nextLevelXpBase);case _:
   return null;
 
 }
@@ -211,7 +217,7 @@ return $default(_that.id,_that.totalPoints,_that.currentLevel,_that.currentStrea
 
 
 class _UserProgressModel extends UserProgressModel {
-   _UserProgressModel({required this.id, required this.totalPoints, required this.currentLevel, required this.currentStreak, required this.lastCompletionDate, required this.weeklyStreakRewardClaimed}): super._();
+   _UserProgressModel({required this.id, required this.totalPoints, required this.currentLevel, required this.currentStreak, required this.lastCompletionDate, required this.weeklyStreakRewardClaimed, this.rank = 'E', this.totalTasksCompleted = 0, this.currentLevelXpBase, this.nextLevelXpBase}): super._();
   
 
 @override final  int id;
@@ -220,6 +226,12 @@ class _UserProgressModel extends UserProgressModel {
 @override final  int currentStreak;
 @override final  DateTime? lastCompletionDate;
 @override final  bool weeklyStreakRewardClaimed;
+@override@JsonKey() final  String rank;
+@override@JsonKey() final  int totalTasksCompleted;
+// Optional configurable XP thresholds. When provided, these override the
+// static Solo Leveling formula so the user can customize XP per level.
+@override final  int? currentLevelXpBase;
+@override final  int? nextLevelXpBase;
 
 /// Create a copy of UserProgressModel
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +243,16 @@ _$UserProgressModelCopyWith<_UserProgressModel> get copyWith => __$UserProgressM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProgressModel&&(identical(other.id, id) || other.id == id)&&(identical(other.totalPoints, totalPoints) || other.totalPoints == totalPoints)&&(identical(other.currentLevel, currentLevel) || other.currentLevel == currentLevel)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastCompletionDate, lastCompletionDate) || other.lastCompletionDate == lastCompletionDate)&&(identical(other.weeklyStreakRewardClaimed, weeklyStreakRewardClaimed) || other.weeklyStreakRewardClaimed == weeklyStreakRewardClaimed));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProgressModel&&(identical(other.id, id) || other.id == id)&&(identical(other.totalPoints, totalPoints) || other.totalPoints == totalPoints)&&(identical(other.currentLevel, currentLevel) || other.currentLevel == currentLevel)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastCompletionDate, lastCompletionDate) || other.lastCompletionDate == lastCompletionDate)&&(identical(other.weeklyStreakRewardClaimed, weeklyStreakRewardClaimed) || other.weeklyStreakRewardClaimed == weeklyStreakRewardClaimed)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.totalTasksCompleted, totalTasksCompleted) || other.totalTasksCompleted == totalTasksCompleted)&&(identical(other.currentLevelXpBase, currentLevelXpBase) || other.currentLevelXpBase == currentLevelXpBase)&&(identical(other.nextLevelXpBase, nextLevelXpBase) || other.nextLevelXpBase == nextLevelXpBase));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,totalPoints,currentLevel,currentStreak,lastCompletionDate,weeklyStreakRewardClaimed);
+int get hashCode => Object.hash(runtimeType,id,totalPoints,currentLevel,currentStreak,lastCompletionDate,weeklyStreakRewardClaimed,rank,totalTasksCompleted,currentLevelXpBase,nextLevelXpBase);
 
 @override
 String toString() {
-  return 'UserProgressModel(id: $id, totalPoints: $totalPoints, currentLevel: $currentLevel, currentStreak: $currentStreak, lastCompletionDate: $lastCompletionDate, weeklyStreakRewardClaimed: $weeklyStreakRewardClaimed)';
+  return 'UserProgressModel(id: $id, totalPoints: $totalPoints, currentLevel: $currentLevel, currentStreak: $currentStreak, lastCompletionDate: $lastCompletionDate, weeklyStreakRewardClaimed: $weeklyStreakRewardClaimed, rank: $rank, totalTasksCompleted: $totalTasksCompleted, currentLevelXpBase: $currentLevelXpBase, nextLevelXpBase: $nextLevelXpBase)';
 }
 
 
@@ -251,7 +263,7 @@ abstract mixin class _$UserProgressModelCopyWith<$Res> implements $UserProgressM
   factory _$UserProgressModelCopyWith(_UserProgressModel value, $Res Function(_UserProgressModel) _then) = __$UserProgressModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int totalPoints, int currentLevel, int currentStreak, DateTime? lastCompletionDate, bool weeklyStreakRewardClaimed
+ int id, int totalPoints, int currentLevel, int currentStreak, DateTime? lastCompletionDate, bool weeklyStreakRewardClaimed, String rank, int totalTasksCompleted, int? currentLevelXpBase, int? nextLevelXpBase
 });
 
 
@@ -268,7 +280,7 @@ class __$UserProgressModelCopyWithImpl<$Res>
 
 /// Create a copy of UserProgressModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? totalPoints = null,Object? currentLevel = null,Object? currentStreak = null,Object? lastCompletionDate = freezed,Object? weeklyStreakRewardClaimed = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? totalPoints = null,Object? currentLevel = null,Object? currentStreak = null,Object? lastCompletionDate = freezed,Object? weeklyStreakRewardClaimed = null,Object? rank = null,Object? totalTasksCompleted = null,Object? currentLevelXpBase = freezed,Object? nextLevelXpBase = freezed,}) {
   return _then(_UserProgressModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,totalPoints: null == totalPoints ? _self.totalPoints : totalPoints // ignore: cast_nullable_to_non_nullable
@@ -276,7 +288,11 @@ as int,currentLevel: null == currentLevel ? _self.currentLevel : currentLevel //
 as int,currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
 as int,lastCompletionDate: freezed == lastCompletionDate ? _self.lastCompletionDate : lastCompletionDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,weeklyStreakRewardClaimed: null == weeklyStreakRewardClaimed ? _self.weeklyStreakRewardClaimed : weeklyStreakRewardClaimed // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,rank: null == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
+as String,totalTasksCompleted: null == totalTasksCompleted ? _self.totalTasksCompleted : totalTasksCompleted // ignore: cast_nullable_to_non_nullable
+as int,currentLevelXpBase: freezed == currentLevelXpBase ? _self.currentLevelXpBase : currentLevelXpBase // ignore: cast_nullable_to_non_nullable
+as int?,nextLevelXpBase: freezed == nextLevelXpBase ? _self.nextLevelXpBase : nextLevelXpBase // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

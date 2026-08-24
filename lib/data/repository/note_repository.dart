@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
-import 'package:ascend/core/utils/input_formatter.dart';
-import 'package:ascend/data/db/dao/note_dao.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/data/db/tables/note_table.dart';
-import 'package:ascend/domain/models/note_model.dart';
+import 'package:solo_leveling/core/utils/input_formatter.dart';
+import 'package:solo_leveling/data/db/dao/note_dao.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
+import 'package:solo_leveling/domain/models/note_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'note_repository.g.dart';

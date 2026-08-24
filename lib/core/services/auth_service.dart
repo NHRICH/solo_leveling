@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
-  static const String _baseUrl = 'https://ascend-in.vercel.app/api/v1/auth';
+  static const String _baseUrl = 'https://solo-leveling-api.vercel.app/api/v1/auth';
   static const _storage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );

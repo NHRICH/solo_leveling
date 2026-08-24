@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:ascend/core/services/app_preferences.dart';
-import 'package:ascend/data/db/app_database.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
@@ -88,7 +88,7 @@ Future<void> _handleNotifications(AppDatabase db) async {
             flutterLocalNotificationsPlugin,
             id: task.id + 10000,
             title: "Forgot something?",
-            body: "'${task.title}' is overdue. Ascend and conquer it now!",
+            body: "'${task.title}' is overdue. Level up and conquer it now!",
           );
           await AppPreferences.setPreferenceBool(overdueNotifiedKey, true);
         }
@@ -161,7 +161,7 @@ Future<void> _handleAutomatedBackups(AppDatabase db) async {
       .split('.')
       .first;
   final backupFile = File(
-    p.join(backupFolder, 'ascend_backup_$timestamp.sqlite'),
+    p.join(backupFolder, 'sololeveling_backup_$timestamp.sqlite'),
   );
 
   // Copy db file
@@ -180,7 +180,7 @@ Future<void> _handleAutomatedBackups(AppDatabase db) async {
       .where(
         (f) =>
             f is File &&
-            p.basename(f.path).startsWith('ascend_backup_') &&
+            p.basename(f.path).startsWith('sololeveling_backup_') &&
             p.basename(f.path).endsWith('.sqlite'),
       )
       .toList();
@@ -208,7 +208,7 @@ Future<void> _showNotification(
   required String body,
 }) async {
   const androidDetails = AndroidNotificationDetails(
-    'ascend_task_reminders',
+    'sololeveling_task_reminders',
     'Task Reminders',
     channelDescription: 'Notifications for upcoming and overdue tasks',
     importance: Importance.max,
@@ -230,7 +230,7 @@ Future<void> _showNotification(
 }
 
 class BackgroundService {
-  static const periodicTaskName = "com.onimusha.ascend.periodicTask";
+  static const periodicTaskName = "com.sololeveling.periodicTask";
 
   static Future<void> initialize() async {
     // Initialize WorkManager

@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/data/db/tables/user_progress_table.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/data/db/tables/user_progress_table.dart';
 
 part 'user_progress_dao.g.dart';
 

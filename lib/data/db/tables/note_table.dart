@@ -26,4 +26,7 @@ class NoteTable extends Table {
 
   IntColumn get difficulty =>
       intEnum<TaskDifficulty>().withDefault(const Constant(0))();
+
+  // Solo Leveling: XP awarded for completing this quest
+  IntColumn get xpValue => integer().withDefault(const Constant(10))();
 }

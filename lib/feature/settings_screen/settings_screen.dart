@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/core/constants/constants.dart';
-import 'package:ascend/feature/settings_screen/Screens/account_screen.dart';
-import 'package:ascend/feature/settings_screen/Screens/appearance_screen.dart';
-// import 'package:ascend/feature/settings_screen/Screens/inbox_screen/inbox_screen.dart';
-import 'package:ascend/feature/settings_screen/Screens/notification_screen.dart';
-import 'package:ascend/feature/settings_screen/Screens/data_and_privacy_screen/data_and_privacy_screen.dart';
-import 'package:ascend/feature/settings_screen/Screens/categories_screen/categories_screen.dart';
-import 'package:ascend/feature/settings_screen/Screens/about_screen.dart';
-import 'package:ascend/feature/settings_screen/gamification_screen/gamification_screen.dart';
-import 'package:ascend/feature/settings_screen/widgets/common_setting_tile.dart';
+import 'package:solo_leveling/core/constants/constants.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/account_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/appearance_screen.dart';
+// import 'package:solo_leveling/feature/settings_screen/Screens/inbox_screen/inbox_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/notification_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/data_and_privacy_screen/data_and_privacy_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/categories_screen/categories_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/Screens/about_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/gamification_screen/gamification_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/common_setting_tile.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});

@@ -11,7 +11,7 @@ class InboxScreen extends StatelessWidget {
     // Dummy data representing messages from the server
     final serverMessages = [
       {
-        'title': 'Welcome to Ascend!',
+        'title': 'Welcome to SoloLeveling!',
         'message':
             'We are glad to have you on board. Start organizing your life today by creating your first task.',
         'time': 'Just now',

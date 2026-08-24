@@ -1,5 +1,5 @@
-import 'package:ascend/core/constants/constants.dart';
-import 'package:ascend/core/services/analytics_service.dart';
+import 'package:solo_leveling/core/constants/constants.dart';
+import 'package:solo_leveling/core/services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';

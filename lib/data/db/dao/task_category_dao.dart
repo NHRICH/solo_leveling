@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/data/db/tables/task_categories_table.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/data/db/tables/task_categories_table.dart';
 
 part 'task_category_dao.g.dart';
 

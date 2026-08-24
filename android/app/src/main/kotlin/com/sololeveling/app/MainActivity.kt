@@ -1,4 +1,4 @@
-package com.onimusha.ascend
+package com.sololeveling.app
 
 import android.os.Build
 import android.os.Bundle

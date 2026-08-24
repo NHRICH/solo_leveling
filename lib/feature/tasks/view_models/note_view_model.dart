@@ -1,9 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/data/db/tables/note_table.dart';
-import 'package:ascend/data/repository/note_repository.dart';
-import 'package:ascend/feature/tasks/view_models/state/note_state.dart';
-import 'package:ascend/view_model/gamification_provider.dart';
-import 'package:ascend/view_model/user_progress_view_model.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
+import 'package:solo_leveling/data/repository/note_repository.dart';
+import 'package:solo_leveling/feature/tasks/view_models/state/note_state.dart';
+import 'package:solo_leveling/view_model/gamification_provider.dart';
+import 'package:solo_leveling/view_model/user_progress_view_model.dart';
+
+/// Result of completing a quest, exposed to the UI for "System" popups.
+class QuestCompletionResult {
+  final bool leveledUp;
+  final int xpGained;
+  final int newLevel;
+  final String newRank;
+
+  const QuestCompletionResult({
+    required this.leveledUp,
+    required this.xpGained,
+    required this.newLevel,
+    required this.newRank,
+  });
+}
 
 final noteViewModelProvider = NotifierProvider<NoteViewModel, NoteState>(
   () => NoteViewModel(),
@@ -12,7 +27,6 @@ final noteViewModelProvider = NotifierProvider<NoteViewModel, NoteState>(
 class NoteViewModel extends Notifier<NoteState> {
   @override
   NoteState build() {
-    // Load notes when the provider is first read
     Future.microtask(() => getAllNotes());
     return NoteState();
   }
@@ -75,7 +89,9 @@ class NoteViewModel extends Notifier<NoteState> {
     }
   }
 
-  Future<void> toggleNoteCompletion(int id) async {
+  /// Completes a quest (task). Returns the completion result so the UI can
+  /// show the Solo Leveling "System" popups.
+  Future<QuestCompletionResult?> toggleNoteCompletion(int id) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
@@ -84,19 +100,32 @@ class NoteViewModel extends Notifier<NoteState> {
 
       await repository.toggleCompletion(id);
 
-      // If gamification is enabled and task was NOT completed and now it IS completed, award points
       if (ref.read(gamificationProvider) && !note.isCompleted) {
-        await ref
+        final xpGained = UserProgressViewModel.xpForDifficulty(note.difficulty);
+        final leveledUp = await ref
             .read(userProgressViewModelProvider.notifier)
             .awardPoints(note.difficulty);
+
+        // Await the fresh progress (awardPoints invalidated the provider).
+        final progress = await ref.read(userProgressViewModelProvider.future);
+        await getAllNotes();
+
+        return QuestCompletionResult(
+          leveledUp: leveledUp,
+          xpGained: xpGained,
+          newLevel: progress?.currentLevel ?? 1,
+          newRank: (progress?.rank ?? 'e').toUpperCase(),
+        );
       }
 
       await getAllNotes();
+      return null;
     } catch (e, s) {
       state = state.copyWith(
         isLoading: false,
         error: 'Failed to toggle note completion: $e\n$s',
       );
+      return null;
     }
   }
 
@@ -164,18 +193,4 @@ class NoteViewModel extends Notifier<NoteState> {
       );
     }
   }
-
-  // Future<void> searchByText(String query) async {
-  //   state = state.copyWith(isLoading: true, error: null);
-
-  //   try {
-  //     final notes = ref.read(noteRepositoryProvider).searchByText(query);
-  //     state = state.copyWith(isLoading: false, notes: notes, error: null);
-  //   } catch (e, s) {
-  //     state = state.copyWith(
-  //       isLoading: false,
-  //       error: 'Failed to search notes: $e\n$s',
-  //     );
-  //   }
-  // }
 }

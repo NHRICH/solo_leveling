@@ -34,7 +34,7 @@ final class UserProgressViewModelProvider
 }
 
 String _$userProgressViewModelHash() =>
-    r'3d8ffc740edee0930510cfc64b4fca8ece43b1e3';
+    r'8b971278467b465d3abdf02e776c14bdc8b20419';
 
 abstract class _$UserProgressViewModel
     extends $AsyncNotifier<UserProgressModel?> {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ascend/core/constants/constants.dart';
+import 'package:solo_leveling/core/constants/constants.dart';
 
 class IconUtils {
   static Widget buildCategoryIcon(

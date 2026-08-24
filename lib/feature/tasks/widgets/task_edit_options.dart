@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/feature/tasks/view_models/note_view_model.dart';
-import 'package:ascend/feature/tasks/widgets/create_note/create_note_view.dart';
+import 'package:solo_leveling/core/widgets/system_overlay.dart';
+import 'package:solo_leveling/feature/tasks/view_models/note_view_model.dart';
+import 'package:solo_leveling/feature/tasks/widgets/create_note/create_note_view.dart';
 
 void showTaskOptions(
   BuildContext context,
@@ -49,8 +50,8 @@ void showTaskOptions(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Row(
                   children: [
-                    Text(
-                      "Task Actions",
+                      Text(
+                        "Quest Actions",
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5,
@@ -95,11 +96,28 @@ void showTaskOptions(
                             ? Icons.undo_rounded
                             : Icons.check_circle_rounded,
                         color: isCompleted ? cs.tertiary : cs.primary,
-                        onTap: () {
-                          ref
+                        onTap: () async {
+                          final result = await ref
                               .read(noteViewModelProvider.notifier)
                               .toggleNoteCompletion(id);
+                          if (!context.mounted) return;
                           Navigator.pop(context);
+
+                          if (result != null) {
+                            if (result.leveledUp) {
+                              SystemOverlay.showLevelUp(
+                                context,
+                                newLevel: result.newLevel,
+                                rank: result.newRank,
+                              );
+                            } else {
+                              SystemOverlay.showQuestComplete(
+                                context,
+                                questTitle: 'Quest Completed',
+                                xpGained: result.xpGained,
+                              );
+                            }
+                          }
                         },
                       ),
                       Divider(
@@ -136,7 +154,7 @@ void showTaskOptions(
                         color: cs.outlineVariant.withAlpha(50),
                       ),
                       _OptionItem(
-                        label: "Delete Task",
+                        label: "Delete Quest",
                         icon: Icons.delete_forever_rounded,
                         color: cs.error,
                         isCritical: true,
@@ -147,7 +165,7 @@ void showTaskOptions(
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: const Text('Task deleted successfully'),
+                              content: const Text('Quest deleted successfully'),
                               behavior: SnackBarBehavior.floating,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),

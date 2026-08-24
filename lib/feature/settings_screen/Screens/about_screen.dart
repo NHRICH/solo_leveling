@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:ascend/core/constants/constants.dart';
+import 'package:solo_leveling/core/constants/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:ascend/feature/settings_screen/widgets/common_setting_tile.dart';
+import 'package:solo_leveling/feature/settings_screen/widgets/common_setting_tile.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -111,7 +111,7 @@ class _AboutScreenState extends State<AboutScreen> {
                         child: Column(
                           children: [
                             Text(
-                              "Made with ❤️ by ${AppConstants.author}",
+                              "Made with ❤️ for the open source community",
                               style: theme.textTheme.labelMedium?.copyWith(
                                 color: cs.outline,
                                 fontWeight: FontWeight.w600,

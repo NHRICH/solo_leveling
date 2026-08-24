@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 import 'package:drift/drift.dart';
-import 'package:ascend/data/db/app_database.dart';
-import 'package:ascend/data/db/tables/note_table.dart';
-import 'package:ascend/domain/models/user_progress_model.dart';
+import 'package:solo_leveling/data/db/app_database.dart';
+import 'package:solo_leveling/data/db/tables/note_table.dart';
+import 'package:solo_leveling/domain/models/user_progress_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_progress_view_model.g.dart';
@@ -15,11 +15,12 @@ class UserProgressViewModel extends _$UserProgressViewModel {
     var progress = await dao.getProgress();
 
     if (progress == null) {
-      // Initialize with default values if not exists
       final newProgress = UserProgressTableCompanion.insert(
         totalPoints: const Value(0),
         currentLevel: const Value(1),
         currentStreak: const Value(0),
+        rank: const Value('E'),
+        totalTasksCompleted: const Value(0),
         weeklyStreakRewardClaimed: const Value(false),
       );
       await dao.insertProgress(newProgress);
@@ -29,24 +30,27 @@ class UserProgressViewModel extends _$UserProgressViewModel {
     return progress != null ? UserProgressModel.fromEntity(progress) : null;
   }
 
-  Future<void> awardPoints(TaskDifficulty difficulty) async {
+  /// Solo Leveling XP map: Low = 10 XP, Medium = 25 XP, High = 50 XP.
+  /// Public so UI can display the XP gained without recomputing.
+  static int xpForDifficulty(TaskDifficulty difficulty) {
+    return switch (difficulty) {
+      TaskDifficulty.easy => 10,
+      TaskDifficulty.medium => 25,
+      TaskDifficulty.hard => 50,
+    };
+  }
+
+  /// Alias used internally by [awardPoints].
+  int _xpForDifficulty(TaskDifficulty difficulty) =>
+      xpForDifficulty(difficulty);
+
+  /// Award XP, update level/points/rank/streak. Returns true if leveled up.
+  Future<bool> awardPoints(TaskDifficulty difficulty) async {
     final currentProgress = state.value;
-    if (currentProgress == null) return;
+    if (currentProgress == null) return false;
 
-    int pointsToAdd = 0;
-    switch (difficulty) {
-      case TaskDifficulty.easy:
-        pointsToAdd = 5;
-        break;
-      case TaskDifficulty.medium:
-        pointsToAdd = 10;
-        break;
-      case TaskDifficulty.hard:
-        pointsToAdd = 15;
-        break;
-    }
+    final pointsToAdd = _xpForDifficulty(difficulty);
 
-    // Streak logic
     int newStreak = currentProgress.currentStreak;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -65,13 +69,10 @@ class UserProgressViewModel extends _$UserProgressViewModel {
     } else {
       final difference = today.difference(lastCompletion).inDays;
       if (difference == 1) {
-        // Consecutive day
         newStreak++;
       } else if (difference > 1) {
-        // Streak broken
         newStreak = 1;
       }
-      // if difference == 0, already completed a task today, streak remains same
     }
 
     int streakPoints = 0;
@@ -81,7 +82,6 @@ class UserProgressViewModel extends _$UserProgressViewModel {
         if (lastCompletion != null && today.isAfter(lastCompletion)) {
           weeklyClaimed = false;
         }
-
         if (!weeklyClaimed) {
           streakPoints = 50;
           weeklyClaimed = true;
@@ -93,12 +93,20 @@ class UserProgressViewModel extends _$UserProgressViewModel {
 
     final finalPoints =
         currentProgress.totalPoints + pointsToAdd + streakPoints;
-    final newLevel = _calculateLevel(finalPoints);
+
+    final oldLevel = currentProgress.currentLevel;
+    int newLevel = oldLevel;
+    while (_xpForLevel(newLevel + 1) <= finalPoints) {
+      newLevel++;
+    }
+    final leveledUp = newLevel > oldLevel;
 
     final updatedCompanion = UserProgressTableCompanion(
       totalPoints: Value(finalPoints),
       currentLevel: Value(newLevel),
       currentStreak: Value(newStreak),
+      rank: Value(Rank.forLevel(newLevel).name.toLowerCase()),
+      totalTasksCompleted: Value(currentProgress.totalTasksCompleted + 1),
       lastCompletionDate: Value(today),
       weeklyStreakRewardClaimed: Value(weeklyClaimed),
       updatedAt: Value(DateTime.now()),
@@ -109,11 +117,17 @@ class UserProgressViewModel extends _$UserProgressViewModel {
         .userProgressDao
         .updateProgress(updatedCompanion);
     ref.invalidateSelf();
+
+    return leveledUp;
   }
 
-  int _calculateLevel(int points) {
-    // Formula: (n-1)(50 + 25n) = P
-    // n = -0.5 + 0.2 * math.sqrt(56.25 + points)
-    return (-0.5 + 0.2 * math.sqrt(56.25 + points)).floor().toInt();
+  /// Solo Leveling formula: Next Level XP = (Current Level ^ 1.5) * 100.
+  static int _xpForLevel(int n) {
+    if (n <= 1) return 0;
+    double sum = 0;
+    for (var l = 1; l < n; l++) {
+      sum += math.pow(l, 1.5).toDouble() * 100;
+    }
+    return sum.round();
   }
 }

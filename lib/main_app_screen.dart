@@ -2,19 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/core/theme/theme_provider.dart';
-import 'package:ascend/feature/calender_screen/provider/calendar_date_provider.dart';
-import 'package:ascend/feature/calender_screen/calender_screen.dart';
-import 'package:ascend/feature/tasks/widgets/create_note/create_note_view.dart';
-import 'package:ascend/feature/profile_screen/analytics_screen.dart';
-import 'package:ascend/feature/settings_screen/gamification_screen/gamification_screen.dart';
-import 'package:ascend/feature/settings_screen/settings_screen.dart';
-import 'package:ascend/view_model/gamification_provider.dart';
-import 'package:ascend/view_model/user_progress_view_model.dart';
+import 'package:solo_leveling/core/theme/theme_provider.dart';
+import 'package:solo_leveling/feature/calender_screen/provider/calendar_date_provider.dart';
+import 'package:solo_leveling/feature/calender_screen/calender_screen.dart';
+import 'package:solo_leveling/feature/tasks/widgets/create_note/create_note_view.dart';
+import 'package:solo_leveling/feature/profile_screen/analytics_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/gamification_screen/gamification_screen.dart';
+import 'package:solo_leveling/feature/settings_screen/settings_screen.dart';
+import 'package:solo_leveling/view_model/gamification_provider.dart';
+import 'package:solo_leveling/view_model/user_progress_view_model.dart';
 
-import 'package:ascend/feature/journal/journal_screen.dart';
-import 'package:ascend/feature/habit_tracker/habit_tracker_screen.dart';
-import 'package:ascend/feature/focus_mode/focus_mode_screen.dart';
+import 'package:solo_leveling/feature/journal/journal_screen.dart';
+import 'package:solo_leveling/feature/habit_tracker/habit_tracker_screen.dart';
+import 'package:solo_leveling/feature/focus_mode/focus_mode_screen.dart';
+import 'package:solo_leveling/core/services/default_quests_service.dart';
 
 class MainAppScreen extends ConsumerStatefulWidget {
   final int initialIndex;
@@ -38,7 +39,11 @@ class _MainAppScreenState extends ConsumerState<MainAppScreen> {
   @override
   void initState() {
     super.initState();
-    currentIndex = widget.initialIndex % pages.length; // Ensure valid index
+    currentIndex = widget.initialIndex % pages.length;
+    // Seed default Solo Leveling quests on first launch
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DefaultQuestsService.seedIfNeeded(ref);
+    });
   }
 
   void _switchTab(int index) => setState(() => currentIndex = index);
@@ -224,9 +229,11 @@ class _MainAppScreenState extends ConsumerState<MainAppScreen> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                final initialDate = currentIndex == 0
-                    ? ref.read(selectedCalendarDateProvider)
-                    : null;
+                final initialDate = switch (currentIndex) {
+                  0 => ref.read(selectedCalendarDateProvider),
+                  2 => DateTime.now(),
+                  _ => null,
+                };
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -253,7 +260,7 @@ class _MainAppScreenState extends ConsumerState<MainAppScreen> {
         bottomNavigationBar: BottomAppBar(
           padding: EdgeInsets.zero,
           notchMargin: 8,
-          color: cs.surface.withAlpha(242), // 0.95 alpha approx
+          color: cs.surface.withAlpha(242),
           elevation: 0,
           shape: const CircularNotchedRectangle(),
           child: Padding(
@@ -262,30 +269,30 @@ class _MainAppScreenState extends ConsumerState<MainAppScreen> {
               height: 60,
               child: Row(
                 children: [
-                   _buildTabItem(
+                  _buildTabItem(
                     index: 0,
                     icon: CupertinoIcons.calendar,
                     activeIcon: CupertinoIcons.calendar_today,
-                    label: 'Timeline',
+                    label: 'Guild',
                   ),
                   _buildTabItem(
                     index: 1,
                     icon: CupertinoIcons.book,
                     activeIcon: CupertinoIcons.book_fill,
-                    label: 'Journal',
+                    label: 'Quest',
                   ),
                   const SizedBox(width: 70), // Center gap
                   _buildTabItem(
                     index: 2,
                     icon: CupertinoIcons.checkmark_seal,
                     activeIcon: CupertinoIcons.checkmark_seal_fill,
-                    label: 'Habits',
+                    label: 'Daily',
                   ),
                   _buildTabItem(
                     index: 3,
                     icon: CupertinoIcons.timer,
                     activeIcon: CupertinoIcons.timer_fill,
-                    label: 'Focus',
+                    label: 'Dungeon',
                   ),
                 ],
               ),
@@ -298,10 +305,10 @@ class _MainAppScreenState extends ConsumerState<MainAppScreen> {
 
   String _getPageTitle(int index) {
     return switch (index) {
-      0 => 'Timeline',
-      1 => 'Journal',
-      2 => 'Habit Tracker',
-      3 => 'Focus Mode',
+      0 => 'Hunter Guild',
+      1 => 'Quest Log',
+      2 => 'Daily Quests',
+      3 => 'Focus Dungeon',
       _ => '',
     };
   }

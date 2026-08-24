@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/core/theme/theme_provider.dart';
+import 'package:solo_leveling/core/theme/theme_provider.dart';
 
 class ThemeModeDropdown extends ConsumerWidget {
   final ThemeMode themeMode;

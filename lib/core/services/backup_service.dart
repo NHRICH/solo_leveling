@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:ascend/core/services/auth_service.dart';
+import 'package:solo_leveling/core/services/auth_service.dart';
 
 class BackupService {
-  static const String _baseUrl = 'https://ascend-in.vercel.app/api/v1/backup';
+  static const String _baseUrl = 'https://solo-leveling-api.vercel.app/api/v1/backup';
 
   /// Uploads a backup file (SQLite or JSON) to the cloud.
   static Future<Map<String, dynamic>> uploadBackup(File backupFile) async {

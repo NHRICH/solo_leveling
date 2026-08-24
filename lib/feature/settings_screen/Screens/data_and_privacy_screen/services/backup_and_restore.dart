@@ -3,9 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:ascend/core/constants/constants.dart';
-import 'package:ascend/core/services/app_preferences.dart';
-import 'package:ascend/core/services/notification_service.dart';
+import 'package:solo_leveling/core/constants/constants.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
+import 'package:solo_leveling/core/services/notification_service.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 

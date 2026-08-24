@@ -1,4 +1,4 @@
-import 'package:ascend/core/services/app_preferences.dart';
+import 'package:solo_leveling/core/services/app_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gamification_provider.g.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ascend/core/utils/date_formatter.dart';
-import 'package:ascend/feature/home_screen/widgets/no_task_placeholder.dart';
-import 'package:ascend/feature/home_screen/widgets/no_task_remaining_widget.dart';
-import 'package:ascend/feature/home_screen/widgets/today_overview_card.dart';
-import 'package:ascend/feature/tasks/view_models/note_view_model.dart';
-import 'package:ascend/feature/tasks/widgets/tasks_cards.dart';
+import 'package:solo_leveling/core/utils/date_formatter.dart';
+import 'package:solo_leveling/feature/home_screen/widgets/no_task_placeholder.dart';
+import 'package:solo_leveling/feature/home_screen/widgets/no_task_remaining_widget.dart';
+import 'package:solo_leveling/feature/home_screen/widgets/today_overview_card.dart';
+import 'package:solo_leveling/feature/tasks/view_models/note_view_model.dart';
+import 'package:solo_leveling/feature/tasks/widgets/tasks_cards.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
