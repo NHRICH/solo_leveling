@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class AuthService {
   static const String _baseUrl = 'https://solo-leveling-api.vercel.app/api/v1/auth';
   static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
   );
   static const String _keyToken = 'auth_token';
 

@@ -119,9 +119,15 @@ class NotificationService {
   }
 
   /// Removes the live countdown notification (e.g. when the session is
-  /// paused, reset, or completed).
+  /// paused, reset, or completed). Safe to call even if the plugin has not
+  /// been initialized / a platform instance is unavailable, so it can be used
+  /// from `dispose()` without risking an exception during teardown.
   Future<void> cancelFocusCountdownNotification() async {
-    await flutterLocalNotificationsPlugin.cancel(id: _focusOngoingId);
+    try {
+      await flutterLocalNotificationsPlugin.cancel(id: _focusOngoingId);
+    } catch (_) {
+      // No-op if the plugin isn't ready (e.g. in tests or before init).
+    }
   }
 
   /// Schedules a one-shot notification at [when] to alert that the focus
@@ -179,7 +185,11 @@ class NotificationService {
 
   /// Cancels the pending completion alert (e.g. when a run is paused/reset).
   Future<void> cancelFocusCompletion() async {
-    await flutterLocalNotificationsPlugin.cancel(id: _focusCompleteId);
+    try {
+      await flutterLocalNotificationsPlugin.cancel(id: _focusCompleteId);
+    } catch (_) {
+      // No-op if the plugin isn't ready (e.g. in tests or before init).
+    }
   }
 
   /// NOTE: instant notification for backup and restore
