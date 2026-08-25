@@ -80,8 +80,20 @@ class _WeekCarouselWidgetState extends ConsumerState<WeekCarouselWidget> {
             height: 90,
             child: PageView.builder(
               controller: _pageController,
-              onPageChanged: (index) =>
-                  setState(() => _currentPageIndex = index),
+              onPageChanged: (index) {
+                setState(() => _currentPageIndex = index);
+                // Keep the parent's selected date in sync with the displayed
+                // week so the task list never "disappears" after swiping weeks.
+                final newWeekStart = _initialWeekStart.add(
+                  Duration(days: (index - 1000) * 7),
+                );
+                final newDate = newWeekStart.add(
+                  Duration(days: widget.selectedDate.weekday % 7),
+                );
+                if (!_isSameDay(newDate, widget.selectedDate)) {
+                  widget.onDateSelected(newDate);
+                }
+              },
               itemBuilder: (context, pageIndex) {
                 final weekStart = _initialWeekStart.add(
                   Duration(days: (pageIndex - 1000) * 7),

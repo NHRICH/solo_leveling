@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    // Built-in Kotlin is enabled via android.builtInKotlin=true in gradle.properties
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -47,3 +46,5 @@ dependencies {
 flutter {
     source = "../.."
 }
+
+

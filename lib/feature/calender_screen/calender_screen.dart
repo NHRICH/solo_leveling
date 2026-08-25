@@ -76,100 +76,91 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       return localDate == today;
     }).toList();
 
-    return Column(
-      children: [
-        // Level & Rank Card (System dashboard merged)
-        progressAsync.when(
-          data: (progress) {
-            if (progress == null) return const SizedBox.shrink();
-            return _buildLevelCard(context, progress, todayQuests);
-          },
-          loading: () => const SizedBox(
-            height: 8,
-            child: Center(child: LinearProgressIndicator()),
+    // The whole page scrolls together as one view so nothing gets "stuck" and
+    // the task list stays in sync with the selected day.
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 4),
+          sliver: SliverToBoxAdapter(
+            child: progressAsync.when(
+              data: (progress) {
+                if (progress == null) return const SizedBox.shrink();
+                return _buildLevelCard(context, progress, todayQuests);
+              },
+              loading: () => const SizedBox(
+                height: 8,
+                child: Center(child: LinearProgressIndicator()),
+              ),
+              error: (err, _) => const SizedBox.shrink(),
+            ),
           ),
-          error: (err, _) => const SizedBox.shrink(),
         ),
-        WeekCarouselWidget(
-          selectedDate: _selectedDate,
-          onDateSelected: (date) {
-            setState(() => _selectedDate = date);
-            ref.read(selectedCalendarDateProvider.notifier).setDate(date);
-          },
+        SliverToBoxAdapter(
+          child: WeekCarouselWidget(
+            selectedDate: _selectedDate,
+            onDateSelected: (date) {
+              setState(() => _selectedDate = date);
+              ref
+                  .read(selectedCalendarDateProvider.notifier)
+                  .setDate(date);
+            },
+          ),
         ),
-        Expanded(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 400),
-            layoutBuilder: (currentChild, previousChildren) {
-              return Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  ...previousChildren,
-                  ?currentChild,
-                ],
-              );
-            },
-            transitionBuilder: (child, animation) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            child: listItems.isEmpty
-                ? _buildEmptyState(context)
-                : SingleChildScrollView(
-                    key: ValueKey(_selectedDate),
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Remaining Tasks
-                        Wrap(
-                          alignment: WrapAlignment.start,
-                          spacing: 16,
-                          runSpacing: 16,
-                          children: remainingTasks
-                              .map(
-                                (item) => TasksCard(
-                                  id: item.id,
-                                  title: item.title,
-                                  description: item.description ?? '',
-                                  dueTime: item.dueDate ?? item.createdAt,
-                                  priority: item.priority,
-                                  difficulty: item.difficulty,
-                                  isCompleted: item.isCompleted,
-                                  taskType: item.taskType,
-                                ),
-                              )
-                              .toList(),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              if (listItems.isEmpty)
+                SizedBox(
+                  height: 320,
+                  child: _buildEmptyState(context),
+                )
+              else ...[
+                // Remaining Tasks
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 16,
+                  runSpacing: 16,
+                  children: remainingTasks
+                      .map(
+                        (item) => TasksCard(
+                          id: item.id,
+                          title: item.title,
+                          description: item.description ?? '',
+                          dueTime: item.dueDate ?? item.createdAt,
+                          priority: item.priority,
+                          difficulty: item.difficulty,
+                          isCompleted: item.isCompleted,
+                          taskType: item.taskType,
                         ),
-
-                        if (completedTasks.isNotEmpty && _showCompleted) ...[
-                          _buildCompletedHeader(
-                            cs,
-                            theme,
-                            completedTasks.length,
+                      )
+                      .toList(),
+                ),
+                if (completedTasks.isNotEmpty && _showCompleted) ...[
+                  _buildCompletedHeader(cs, theme, completedTasks.length),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: completedTasks
+                        .map(
+                          (item) => TasksCard(
+                            id: item.id,
+                            title: item.title,
+                            description: item.description ?? '',
+                            dueTime: item.dueDate ?? item.createdAt,
+                            priority: item.priority,
+                            difficulty: item.difficulty,
+                            isCompleted: item.isCompleted,
+                            taskType: item.taskType,
                           ),
-                          Wrap(
-                            alignment: WrapAlignment.start,
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: completedTasks
-                                .map(
-                                  (item) => TasksCard(
-                                    id: item.id,
-                                    title: item.title,
-                                    description: item.description ?? '',
-                                    dueTime: item.dueDate ?? item.createdAt,
-                                    priority: item.priority,
-                                    difficulty: item.difficulty,
-                                    isCompleted: item.isCompleted,
-                                    taskType: item.taskType,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ],
-                      ],
-                    ),
+                        )
+                        .toList(),
                   ),
+                ],
+              ],
+            ]),
           ),
         ),
       ],

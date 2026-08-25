@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solo_leveling/view_model/gamification_provider.dart';
 import 'package:solo_leveling/data/db/tables/note_table.dart';
 import 'package:solo_leveling/feature/tasks/view_models/task_category_view_model.dart';
+import 'package:solo_leveling/feature/tasks/view_models/note_view_model.dart';
 import 'package:solo_leveling/feature/tasks/widgets/task_edit_options.dart';
 import 'package:solo_leveling/core/utils/icon_utils.dart';
+import 'package:solo_leveling/core/widgets/system_overlay.dart';
 import 'package:intl/intl.dart';
 
 class TasksCard extends ConsumerStatefulWidget {
@@ -69,6 +71,30 @@ class _TasksCardState extends ConsumerState<TasksCard>
     });
   }
 
+  /// Toggles the completion state directly from the circular checkbox and
+  /// shows the Solo Leveling "System" overlay when a quest is completed.
+  Future<void> _toggleComplete() async {
+    final result = await ref
+        .read(noteViewModelProvider.notifier)
+        .toggleNoteCompletion(widget.id);
+    if (!mounted) return;
+    if (result != null) {
+      if (result.leveledUp) {
+        SystemOverlay.showLevelUp(
+          context,
+          newLevel: result.newLevel,
+          rank: result.newRank,
+        );
+      } else {
+        SystemOverlay.showQuestComplete(
+          context,
+          questTitle: 'Quest Completed',
+          xpGained: result.xpGained,
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final categoriesState = ref.watch(taskCategoryViewModelProvider);
@@ -115,21 +141,44 @@ class _TasksCardState extends ConsumerState<TasksCard>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header: Title and Check Icon
+                // Header: circular checkbox toggle + Title
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (!widget.isCompleted) ...[
-                      Container(
-                        width: 10,
-                        height: 10,
-                        margin: const EdgeInsets.only(top: 6, right: 10),
-                        decoration: BoxDecoration(
-                          color: priorityColor,
-                          shape: BoxShape.circle,
+                    // Circular checkbox to toggle completion with a single tap
+                    GestureDetector(
+                      key: ValueKey('task_toggle_${widget.id}'),
+                      behavior: HitTestBehavior.opaque,
+                      onTap: _toggleComplete,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 2, right: 12),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutCubic,
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: widget.isCompleted
+                                ? colorScheme.primary
+                                : Colors.transparent,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: widget.isCompleted
+                                  ? colorScheme.primary
+                                  : priorityColor,
+                              width: 2,
+                            ),
+                          ),
+                          child: widget.isCompleted
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  size: 16,
+                                  color: Colors.white,
+                                )
+                              : null,
                         ),
                       ),
-                    ],
+                    ),
                     Expanded(
                       child: Hero(
                         tag: 'task_title_${widget.id}',
@@ -152,12 +201,6 @@ class _TasksCardState extends ConsumerState<TasksCard>
                         ),
                       ),
                     ),
-                    if (widget.isCompleted)
-                      Icon(
-                        Icons.check_circle_rounded,
-                        color: colorScheme.primary,
-                        size: 20,
-                      ),
                   ],
                 ),
                 const SizedBox(height: 10),
