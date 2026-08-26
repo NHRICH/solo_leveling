@@ -18,6 +18,7 @@ abstract class NoteModel with _$NoteModel {
     required TaskDifficulty difficulty,
     String? taskType,
     @Default(10) int xpValue,
+    @Default(Recurrence.none) Recurrence recurrence,
   }) = _NoteModel;
 
   factory NoteModel.fromEntity(NoteTableData note) {
@@ -33,6 +34,7 @@ abstract class NoteModel with _$NoteModel {
       difficulty: note.difficulty,
       taskType: note.taskType,
       xpValue: note.xpValue,
+      recurrence: note.recurrence,
     );
   }
 }

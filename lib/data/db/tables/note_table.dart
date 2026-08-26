@@ -4,6 +4,10 @@ enum Priority { none, low, medium, high }
 
 enum TaskDifficulty { easy, medium, hard }
 
+/// How often a completed quest should respawn as a fresh instance.
+/// [none] means it's a one-off quest that stays done until deleted.
+enum Recurrence { none, daily, weekly, monthly }
+
 class NoteTable extends Table {
   IntColumn get id => integer().autoIncrement()();
 
@@ -29,4 +33,9 @@ class NoteTable extends Table {
 
   // Solo Leveling: XP awarded for completing this quest
   IntColumn get xpValue => integer().withDefault(const Constant(10))();
+
+  // Repeat schedule: when a repeating quest is completed, a fresh copy is
+  // created for the next occurrence (until the quest is deleted).
+  IntColumn get recurrence =>
+      intEnum<Recurrence>().withDefault(const Constant(0))();
 }

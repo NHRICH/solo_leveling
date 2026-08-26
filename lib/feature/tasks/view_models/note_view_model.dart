@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solo_leveling/data/db/tables/note_table.dart';
 import 'package:solo_leveling/data/repository/note_repository.dart';
@@ -65,8 +66,9 @@ class NoteViewModel extends Notifier<NoteState> {
     String? dueDate,
     Priority? priority,
     TaskDifficulty difficulty,
-    String? taskType,
-  ) async {
+    String? taskType, [
+    Recurrence recurrence = Recurrence.none,
+  ]) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
@@ -79,6 +81,7 @@ class NoteViewModel extends Notifier<NoteState> {
             priority,
             difficulty,
             taskType,
+            recurrence,
           );
       await getAllNotes();
     } catch (e, s) {
@@ -88,6 +91,41 @@ class NoteViewModel extends Notifier<NoteState> {
       );
     }
   }
+  /// Returns the due date of the next occurrence for a repeating quest,
+  /// preserving the time of day. Monthly repeats clamp to the last valid
+  /// day of the target month (e.g. Jan 31 -> Feb 28/29).
+  DateTime nextOccurrence(DateTime from, Recurrence recurrence) {
+    switch (recurrence) {
+      case Recurrence.daily:
+        return from.add(const Duration(days: 1));
+      case Recurrence.weekly:
+        return from.add(const Duration(days: 7));
+      case Recurrence.monthly:
+        var candidate = DateTime(
+          from.year,
+          from.month + 1,
+          from.day,
+          from.hour,
+          from.minute,
+        );
+        // DateTime normalizes overflow (Jan 31 -> Mar 2); walk back until we
+        // are on the same day-of-month again (i.e. inside the right month).
+        while (candidate.day != from.day) {
+          candidate = DateTime(
+            candidate.year,
+            candidate.month,
+            candidate.day - 1,
+            from.hour,
+            from.minute,
+          );
+        }
+        return candidate;
+      case Recurrence.none:
+        return from;
+    }
+  }
+
+
 
   /// Completes a quest (task). Returns the completion result so the UI can
   /// show the Solo Leveling "System" popups.
@@ -99,6 +137,27 @@ class NoteViewModel extends Notifier<NoteState> {
       final note = await repository.getNoteById(id);
 
       await repository.toggleCompletion(id);
+
+      // A completed REPEATING quest respawns as a fresh pending instance at
+      // its next occurrence, so it keeps coming back until it is deleted.
+      if (!note.isCompleted && note.recurrence != Recurrence.none) {
+        try {
+          final nextDue = nextOccurrence(
+            note.dueDate ?? note.createdAt,
+            note.recurrence,
+          );
+          // If the schedule slipped (e.g. app unused for days), roll forward
+          // until the next occurrence is actually in the future.
+          var safeDue = nextDue;
+          while (!safeDue.isAfter(DateTime.now())) {
+            safeDue = nextOccurrence(safeDue, note.recurrence);
+          }
+          await repository.insertNextOccurrence(note, safeDue);
+        } catch (e) {
+          // Never block completion because the respawn failed.
+          debugPrint('Failed to respawn recurring quest: $e');
+        }
+      }
 
       if (ref.read(gamificationProvider) && !note.isCompleted) {
         final xpGained = UserProgressViewModel.xpForDifficulty(note.difficulty);
@@ -149,14 +208,16 @@ class NoteViewModel extends Notifier<NoteState> {
     String? description,
     String? dueDate,
     TaskDifficulty? difficulty,
-    String? taskType,
-  ) async {
+    String? taskType, [
+    Recurrence? recurrence,
+  ]) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
       await ref
           .read(noteRepositoryProvider)
-          .updateNote(id, title, description, dueDate, difficulty, taskType);
+          .updateNote(id, title, description, dueDate, difficulty, taskType,
+              recurrence);
       await getAllNotes();
     } catch (e, s) {
       state = state.copyWith(

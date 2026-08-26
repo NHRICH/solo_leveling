@@ -295,6 +295,118 @@ class DifficultySettingTile extends StatelessWidget {
   }
 }
 
+class RecurrenceSettingTile extends StatelessWidget {
+  final Recurrence recurrence;
+  final Function(Recurrence) onSelect;
+  final ColorScheme cs;
+  final ThemeData theme;
+
+  const RecurrenceSettingTile({
+    super.key,
+    required this.recurrence,
+    required this.onSelect,
+    required this.cs,
+    required this.theme,
+  });
+
+  String _label(Recurrence r) {
+    return switch (r) {
+      Recurrence.none => 'None',
+      Recurrence.daily => 'Daily',
+      Recurrence.weekly => 'Weekly',
+      Recurrence.monthly => 'Monthly',
+    };
+  }
+
+  IconData _icon(Recurrence r) {
+    return switch (r) {
+      Recurrence.none => Icons.repeat_on_rounded,
+      Recurrence.daily => Icons.calendar_today_rounded,
+      Recurrence.weekly => Icons.calendar_today_rounded,
+      Recurrence.monthly => Icons.calendar_month_rounded,
+    };
+  }
+
+  Color _color(Recurrence r) {
+    return switch (r) {
+      Recurrence.none => cs.outline,
+      _ => cs.primary,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _color(recurrence);
+
+    return PopupMenuButton<Recurrence>(
+      onSelected: onSelect,
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      itemBuilder: (context) =>
+          [Recurrence.none, Recurrence.daily, Recurrence.weekly, Recurrence.monthly].map(
+            (r) => PopupMenuItem(
+              value: r,
+              child: Row(
+                children: [
+                  Icon(
+                    _icon(r),
+                    color: _color(r),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    _label(r),
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+            ),
+          ).toList(),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withAlpha(20),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(_icon(recurrence), color: color, size: 22),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Repeats",
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: cs.onSurfaceVariant.withAlpha(150),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    _label(recurrence),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.unfold_more_rounded,
+              color: cs.onSurfaceVariant.withAlpha(100),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class CategorySettingTile extends ConsumerWidget {
   final List<int> selectedIds;
   final VoidCallback onTap;

@@ -35,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
       : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   // migration strategy to add new columns to the db
   @override
@@ -71,6 +71,10 @@ class AppDatabase extends _$AppDatabase {
           if (from < 6) {
             await migrator.createTable(levelConfigTable);
             await _seedLevelConfigs();
+          }
+          if (from < 7) {
+            // Add the recurrence column (intEnum, default 0 = Recurrence.none)
+            await migrator.addColumn(noteTable, noteTable.recurrence);
           }
         },
   );

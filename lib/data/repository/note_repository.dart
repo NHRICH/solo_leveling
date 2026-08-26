@@ -48,8 +48,9 @@ class NoteRepository {
     String? dueDate,
     Priority? priority,
     TaskDifficulty difficulty,
-    String? taskType,
-  ) async {
+    String? taskType, [
+    Recurrence recurrence = Recurrence.none,
+  ]) async {
     try {
       final note = NoteTableCompanion(
         title: Value(getSubString(title, 50)),
@@ -62,11 +63,39 @@ class NoteRepository {
         priority: priority != null ? Value(priority) : const Value.absent(),
         difficulty: Value(difficulty),
         taskType: taskType != null ? Value(taskType) : const Value.absent(),
+        recurrence: Value(recurrence),
         createdAt: Value(DateTime.now()),
         updatedAt: Value(DateTime.now()),
       );
       final noteId = await noteDao.insertNote(note);
       return noteId;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  /// Inserts the NEXT occurrence of a repeating quest as a fresh pending row,
+  /// cloning everything except completion state / timestamps / id.
+  Future<int> insertNextOccurrence(NoteModel base, DateTime nextDue) async {
+    try {
+      final now = DateTime.now();
+      final clone = NoteTableCompanion(
+        title: Value(base.title),
+        description: base.description != null
+            ? Value(base.description!)
+            : const Value.absent(),
+        dueDate: Value(nextDue),
+        priority: Value(base.priority),
+        difficulty: Value(base.difficulty),
+        taskType: base.taskType != null
+            ? Value(base.taskType!)
+            : const Value.absent(),
+        xpValue: Value(base.xpValue),
+        recurrence: Value(base.recurrence),
+        createdAt: Value(now),
+        updatedAt: Value(now),
+      );
+      return await noteDao.insertNote(clone);
     } catch (e) {
       throw Exception(e);
     }
@@ -89,14 +118,16 @@ class NoteRepository {
     String? description,
     String? dueDate,
     TaskDifficulty? difficulty,
-    String? taskType,
-  ) async {
+    String? taskType, [
+    Recurrence? recurrence,
+  ]) async {
     try {
       if (title == null &&
           description == null &&
           dueDate == null &&
           difficulty == null &&
-          taskType == null) {
+          taskType == null &&
+          recurrence == null) {
         throw Exception('No fields to update');
       }
       final note = NoteTableCompanion(
@@ -114,6 +145,9 @@ class NoteRepository {
             ? Value(difficulty)
             : const Value.absent(),
         taskType: taskType != null ? Value(taskType) : const Value.absent(),
+        recurrence: recurrence != null
+            ? Value(recurrence)
+            : const Value.absent(),
         updatedAt: Value(DateTime.now()),
       );
       final noteId = await noteDao.updateNote(note);

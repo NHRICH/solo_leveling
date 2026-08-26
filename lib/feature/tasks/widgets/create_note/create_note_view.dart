@@ -25,8 +25,9 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
   late final TextEditingController _descriptionController;
   DateTime? _selectedDateTime;
   Priority _selectedPriority = Priority.none;
-  TaskDifficulty _selectedDifficulty = TaskDifficulty.easy;
+     TaskDifficulty _selectedDifficulty = TaskDifficulty.easy;
   List<int> _selectedCategoryIds = [];
+  Recurrence _selectedRecurrence = Recurrence.none;
 
   bool get _isEditMode => widget.noteToEdit != null;
 
@@ -48,6 +49,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
     _selectedDateTime = note?.dueDate ?? widget.initialDate;
     _selectedPriority = note?.priority ?? Priority.none;
     _selectedDifficulty = note?.difficulty ?? TaskDifficulty.easy;
+  _selectedRecurrence = note?.recurrence ?? Recurrence.none;
 
     if (note?.taskType != null && note!.taskType!.isNotEmpty) {
       _selectedCategoryIds = note.taskType!
@@ -147,7 +149,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
         ? null
         : _selectedCategoryIds.join(',');
 
-    if (_isEditMode) {
+       if (_isEditMode) {
       final note = widget.noteToEdit!;
       await ref
           .read(noteViewModelProvider.notifier)
@@ -158,6 +160,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
             dueDateStr,
             _selectedDifficulty,
             taskTypeStr,
+            _selectedRecurrence,
           );
       if (_selectedPriority != note.priority) {
         await ref
@@ -174,6 +177,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
             _selectedPriority,
             _selectedDifficulty,
             taskTypeStr,
+            _selectedRecurrence,
           );
     }
     if (mounted) Navigator.pop(context);
@@ -363,6 +367,19 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
                             difficulty: _selectedDifficulty,
                             onSelect: (d) =>
                                 setState(() => _selectedDifficulty = d),
+                            cs: cs,
+                            theme: theme,
+                          ),
+                          Divider(
+                            height: 1,
+                            indent: 64,
+                            endIndent: 16,
+                            color: cs.outlineVariant.withAlpha(50),
+                          ),
+                          RecurrenceSettingTile(
+                            recurrence: _selectedRecurrence,
+                            onSelect: (r) =>
+                                setState(() => _selectedRecurrence = r),
                             cs: cs,
                             theme: theme,
                           ),

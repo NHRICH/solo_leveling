@@ -141,6 +141,16 @@ class $NoteTableTable extends NoteTable
     defaultValue: const Constant(10),
   );
   @override
+  late final GeneratedColumnWithTypeConverter<Recurrence, int> recurrence =
+      GeneratedColumn<int>(
+        'recurrence',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<Recurrence>($NoteTableTable.$converterrecurrence);
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     title,
@@ -153,6 +163,7 @@ class $NoteTableTable extends NoteTable
     taskType,
     difficulty,
     xpValue,
+    recurrence,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -282,6 +293,12 @@ class $NoteTableTable extends NoteTable
         DriftSqlType.int,
         data['${effectivePrefix}xp_value'],
       )!,
+      recurrence: $NoteTableTable.$converterrecurrence.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}recurrence'],
+        )!,
+      ),
     );
   }
 
@@ -294,6 +311,8 @@ class $NoteTableTable extends NoteTable
       const EnumIndexConverter<Priority>(Priority.values);
   static JsonTypeConverter2<TaskDifficulty, int, int> $converterdifficulty =
       const EnumIndexConverter<TaskDifficulty>(TaskDifficulty.values);
+  static JsonTypeConverter2<Recurrence, int, int> $converterrecurrence =
+      const EnumIndexConverter<Recurrence>(Recurrence.values);
 }
 
 class NoteTableData extends DataClass implements Insertable<NoteTableData> {
@@ -308,6 +327,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
   final String? taskType;
   final TaskDifficulty difficulty;
   final int xpValue;
+  final Recurrence recurrence;
   const NoteTableData({
     required this.id,
     required this.title,
@@ -320,6 +340,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     this.taskType,
     required this.difficulty,
     required this.xpValue,
+    required this.recurrence,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -349,6 +370,11 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
       );
     }
     map['xp_value'] = Variable<int>(xpValue);
+    {
+      map['recurrence'] = Variable<int>(
+        $NoteTableTable.$converterrecurrence.toSql(recurrence),
+      );
+    }
     return map;
   }
 
@@ -371,6 +397,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           : Value(taskType),
       difficulty: Value(difficulty),
       xpValue: Value(xpValue),
+      recurrence: Value(recurrence),
     );
   }
 
@@ -395,6 +422,9 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
         serializer.fromJson<int>(json['difficulty']),
       ),
       xpValue: serializer.fromJson<int>(json['xpValue']),
+      recurrence: $NoteTableTable.$converterrecurrence.fromJson(
+        serializer.fromJson<int>(json['recurrence']),
+      ),
     );
   }
   @override
@@ -416,6 +446,9 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
         $NoteTableTable.$converterdifficulty.toJson(difficulty),
       ),
       'xpValue': serializer.toJson<int>(xpValue),
+      'recurrence': serializer.toJson<int>(
+        $NoteTableTable.$converterrecurrence.toJson(recurrence),
+      ),
     };
   }
 
@@ -431,6 +464,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     Value<String?> taskType = const Value.absent(),
     TaskDifficulty? difficulty,
     int? xpValue,
+    Recurrence? recurrence,
   }) => NoteTableData(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -443,6 +477,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     taskType: taskType.present ? taskType.value : this.taskType,
     difficulty: difficulty ?? this.difficulty,
     xpValue: xpValue ?? this.xpValue,
+    recurrence: recurrence ?? this.recurrence,
   );
   NoteTableData copyWithCompanion(NoteTableCompanion data) {
     return NoteTableData(
@@ -463,6 +498,9 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           ? data.difficulty.value
           : this.difficulty,
       xpValue: data.xpValue.present ? data.xpValue.value : this.xpValue,
+      recurrence: data.recurrence.present
+          ? data.recurrence.value
+          : this.recurrence,
     );
   }
 
@@ -479,7 +517,8 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           ..write('priority: $priority, ')
           ..write('taskType: $taskType, ')
           ..write('difficulty: $difficulty, ')
-          ..write('xpValue: $xpValue')
+          ..write('xpValue: $xpValue, ')
+          ..write('recurrence: $recurrence')
           ..write(')'))
         .toString();
   }
@@ -497,6 +536,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
     taskType,
     difficulty,
     xpValue,
+    recurrence,
   );
   @override
   bool operator ==(Object other) =>
@@ -512,7 +552,8 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           other.priority == this.priority &&
           other.taskType == this.taskType &&
           other.difficulty == this.difficulty &&
-          other.xpValue == this.xpValue);
+          other.xpValue == this.xpValue &&
+          other.recurrence == this.recurrence);
 }
 
 class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
@@ -527,6 +568,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
   final Value<String?> taskType;
   final Value<TaskDifficulty> difficulty;
   final Value<int> xpValue;
+  final Value<Recurrence> recurrence;
   const NoteTableCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -539,6 +581,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     this.taskType = const Value.absent(),
     this.difficulty = const Value.absent(),
     this.xpValue = const Value.absent(),
+    this.recurrence = const Value.absent(),
   });
   NoteTableCompanion.insert({
     this.id = const Value.absent(),
@@ -552,6 +595,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     this.taskType = const Value.absent(),
     this.difficulty = const Value.absent(),
     this.xpValue = const Value.absent(),
+    this.recurrence = const Value.absent(),
   }) : title = Value(title);
   static Insertable<NoteTableData> custom({
     Expression<int>? id,
@@ -565,6 +609,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     Expression<String>? taskType,
     Expression<int>? difficulty,
     Expression<int>? xpValue,
+    Expression<int>? recurrence,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -578,6 +623,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
       if (taskType != null) 'task_type': taskType,
       if (difficulty != null) 'difficulty': difficulty,
       if (xpValue != null) 'xp_value': xpValue,
+      if (recurrence != null) 'recurrence': recurrence,
     });
   }
 
@@ -593,6 +639,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     Value<String?>? taskType,
     Value<TaskDifficulty>? difficulty,
     Value<int>? xpValue,
+    Value<Recurrence>? recurrence,
   }) {
     return NoteTableCompanion(
       id: id ?? this.id,
@@ -606,6 +653,7 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
       taskType: taskType ?? this.taskType,
       difficulty: difficulty ?? this.difficulty,
       xpValue: xpValue ?? this.xpValue,
+      recurrence: recurrence ?? this.recurrence,
     );
   }
 
@@ -649,6 +697,11 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
     if (xpValue.present) {
       map['xp_value'] = Variable<int>(xpValue.value);
     }
+    if (recurrence.present) {
+      map['recurrence'] = Variable<int>(
+        $NoteTableTable.$converterrecurrence.toSql(recurrence.value),
+      );
+    }
     return map;
   }
 
@@ -665,7 +718,8 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
           ..write('priority: $priority, ')
           ..write('taskType: $taskType, ')
           ..write('difficulty: $difficulty, ')
-          ..write('xpValue: $xpValue')
+          ..write('xpValue: $xpValue, ')
+          ..write('recurrence: $recurrence')
           ..write(')'))
         .toString();
   }
@@ -1906,6 +1960,7 @@ typedef $$NoteTableTableCreateCompanionBuilder =
       Value<String?> taskType,
       Value<TaskDifficulty> difficulty,
       Value<int> xpValue,
+      Value<Recurrence> recurrence,
     });
 typedef $$NoteTableTableUpdateCompanionBuilder =
     NoteTableCompanion Function({
@@ -1920,6 +1975,7 @@ typedef $$NoteTableTableUpdateCompanionBuilder =
       Value<String?> taskType,
       Value<TaskDifficulty> difficulty,
       Value<int> xpValue,
+      Value<Recurrence> recurrence,
     });
 
 class $$NoteTableTableFilterComposer
@@ -1987,6 +2043,12 @@ class $$NoteTableTableFilterComposer
     column: $table.xpValue,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<Recurrence, Recurrence, int> get recurrence =>
+      $composableBuilder(
+        column: $table.recurrence,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
 class $$NoteTableTableOrderingComposer
@@ -2052,6 +2114,11 @@ class $$NoteTableTableOrderingComposer
     column: $table.xpValue,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get recurrence => $composableBuilder(
+    column: $table.recurrence,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$NoteTableTableAnnotationComposer
@@ -2102,6 +2169,12 @@ class $$NoteTableTableAnnotationComposer
 
   GeneratedColumn<int> get xpValue =>
       $composableBuilder(column: $table.xpValue, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Recurrence, int> get recurrence =>
+      $composableBuilder(
+        column: $table.recurrence,
+        builder: (column) => column,
+      );
 }
 
 class $$NoteTableTableTableManager
@@ -2146,6 +2219,7 @@ class $$NoteTableTableTableManager
                 Value<String?> taskType = const Value.absent(),
                 Value<TaskDifficulty> difficulty = const Value.absent(),
                 Value<int> xpValue = const Value.absent(),
+                Value<Recurrence> recurrence = const Value.absent(),
               }) => NoteTableCompanion(
                 id: id,
                 title: title,
@@ -2158,6 +2232,7 @@ class $$NoteTableTableTableManager
                 taskType: taskType,
                 difficulty: difficulty,
                 xpValue: xpValue,
+                recurrence: recurrence,
               ),
           createCompanionCallback:
               ({
@@ -2172,6 +2247,7 @@ class $$NoteTableTableTableManager
                 Value<String?> taskType = const Value.absent(),
                 Value<TaskDifficulty> difficulty = const Value.absent(),
                 Value<int> xpValue = const Value.absent(),
+                Value<Recurrence> recurrence = const Value.absent(),
               }) => NoteTableCompanion.insert(
                 id: id,
                 title: title,
@@ -2184,6 +2260,7 @@ class $$NoteTableTableTableManager
                 taskType: taskType,
                 difficulty: difficulty,
                 xpValue: xpValue,
+                recurrence: recurrence,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
