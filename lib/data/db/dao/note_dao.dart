@@ -55,6 +55,12 @@ class NoteDao extends DatabaseAccessor<AppDatabase> with _$NoteDaoMixin {
     return (delete(noteTable)).go();
   }
 
+  // delete notes whose title matches any given title (used to clean-reseed
+  // the default daily quests without leaving stale duplicates behind).
+  Future<int> deleteNotesByTitles(List<String> titles) {
+    return (delete(noteTable)..where((t) => t.title.isIn(titles))).go();
+  }
+
   // search notes by text
   Stream<List<NoteTableData>> searchByText(String query) {
     final searchTerm = query.toLowerCase();

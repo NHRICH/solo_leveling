@@ -320,10 +320,10 @@ class RecurrenceSettingTile extends StatelessWidget {
 
   IconData _icon(Recurrence r) {
     return switch (r) {
-      Recurrence.none => Icons.repeat_on_rounded,
-      Recurrence.daily => Icons.calendar_today_rounded,
-      Recurrence.weekly => Icons.calendar_today_rounded,
-      Recurrence.monthly => Icons.calendar_month_rounded,
+      Recurrence.none => Icons.not_interested_rounded,
+      Recurrence.daily => Icons.wb_sunny_rounded,
+      Recurrence.weekly => Icons.hourglass_bottom_rounded,
+      Recurrence.monthly => Icons.nightlight_round,
     };
   }
 

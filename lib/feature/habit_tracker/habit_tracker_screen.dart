@@ -24,12 +24,8 @@ class HabitTrackerScreen extends ConsumerWidget {
 
     // Today's quests only
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final todayQuests = allNotes.where((n) {
-      final date = n.dueDate ?? n.createdAt;
-      final localDate = DateTime(date.year, date.month, date.day);
-      return localDate == today;
-    }).toList();
+    final todayQuests =
+        allNotes.where((n) => noteVisibleOnDay(n, now)).toList();
 
     final incomplete = todayQuests.where((q) => !q.isCompleted).toList();
     final completed = todayQuests.where((q) => q.isCompleted).toList();

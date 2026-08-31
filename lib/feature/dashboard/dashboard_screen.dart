@@ -223,12 +223,8 @@ class DashboardScreen extends ConsumerWidget {
 
   Widget _buildDailyQuests(BuildContext context, List<NoteModel> notes) {
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final quests = notes.where((n) {
-      final date = n.dueDate ?? n.createdAt;
-      final localDate = DateTime(date.year, date.month, date.day);
-      return localDate == today;
-    }).toList();
+    final quests =
+        notes.where((n) => noteVisibleOnDay(n, now)).toList();
 
     if (quests.isEmpty) {
       return Center(

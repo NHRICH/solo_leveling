@@ -44,12 +44,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final progressAsync = ref.watch(userProgressViewModelProvider);
     final allTasks = noteState.notes;
 
-    final tasksForDate = allTasks.where((note) {
-      final dateToMatch = (note.dueDate ?? note.createdAt).toLocal();
-      return dateToMatch.year == _selectedDate.year &&
-          dateToMatch.month == _selectedDate.month &&
-          dateToMatch.day == _selectedDate.day;
-    }).toList();
+    final tasksForDate = allTasks
+        .where((note) => noteVisibleOnDay(note, _selectedDate))
+        .toList();
 
     final remainingTasks = tasksForDate.where((t) => !t.isCompleted).toList();
     final completedTasks = tasksForDate.where((t) => t.isCompleted).toList();
@@ -69,12 +66,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
     // Today's quests for system overview
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final todayQuests = allTasks.where((n) {
-      final date = n.dueDate ?? n.createdAt;
-      final localDate = DateTime(date.year, date.month, date.day);
-      return localDate == today;
-    }).toList();
+    final todayQuests = allTasks.where((n) => noteVisibleOnDay(n, now)).toList();
 
     // The whole page scrolls together as one view so nothing gets "stuck" and
     // the task list stays in sync with the selected day.
@@ -133,6 +125,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           difficulty: item.difficulty,
                           isCompleted: item.isCompleted,
                           taskType: item.taskType,
+                          recurrence: item.recurrence,
                         ),
                       )
                       .toList(),
@@ -154,6 +147,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                             difficulty: item.difficulty,
                             isCompleted: item.isCompleted,
                             taskType: item.taskType,
+                            recurrence: item.recurrence,
                           ),
                         )
                         .toList(),

@@ -208,6 +208,16 @@ class NoteRepository {
     }
   }
 
+  // delete notes matching any of the given titles (used to clean-reseed the
+  // default daily quests so re-seeded copies don't pile up).
+  Future<int> deleteNotesByTitles(List<String> titles) async {
+    try {
+      return await noteDao.deleteNotesByTitles(titles);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   // search notes by text
   Stream<List<NoteModel>> searchByText(String query) {
     try {

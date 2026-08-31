@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:solo_leveling/core/utils/date_formatter.dart';
+import 'package:solo_leveling/domain/models/note_model.dart';
 import 'package:solo_leveling/feature/home_screen/widgets/no_task_placeholder.dart';
 import 'package:solo_leveling/feature/home_screen/widgets/no_task_remaining_widget.dart';
 import 'package:solo_leveling/feature/home_screen/widgets/today_overview_card.dart';
@@ -19,17 +19,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final tasksState = ref.watch(noteViewModelProvider);
 
-    final todayTasks = tasksState.notes
-        .where((t) => isToday(t.dueDate ?? t.createdAt) && !t.isCompleted)
+    final now = DateTime.now();
+    final visibleNotes = tasksState.notes
+        .where((note) => noteVisibleOnDay(note, now))
         .toList();
+
+    final todayTasks = visibleNotes.where((t) => !t.isCompleted).toList();
 
     todayTasks.sort(
       (a, b) => (a.dueDate ?? a.createdAt).compareTo(b.dueDate ?? b.createdAt),
     );
 
-    final todayCompletedTasks = tasksState.notes
-        .where((t) => isToday(t.dueDate ?? t.createdAt) && t.isCompleted)
-        .toList();
+    final todayCompletedTasks =
+        visibleNotes.where((t) => t.isCompleted).toList();
 
     // TODO: Sort completion history more efficiently or move to the view model
     todayCompletedTasks.sort(
@@ -71,6 +73,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       difficulty: task.difficulty,
                       isCompleted: task.isCompleted,
                       taskType: task.taskType,
+                      recurrence: task.recurrence,
                     ),
                   )
                   .toList(),
@@ -103,6 +106,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       difficulty: task.difficulty,
                       isCompleted: task.isCompleted,
                       taskType: task.taskType,
+                      recurrence: task.recurrence,
                     ),
                   )
                   .toList(),

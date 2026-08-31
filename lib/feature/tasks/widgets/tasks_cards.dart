@@ -20,6 +20,7 @@ class TasksCard extends ConsumerStatefulWidget {
     required this.difficulty,
     required this.isCompleted,
     this.taskType,
+    this.recurrence = Recurrence.none,
   });
 
   final int id;
@@ -30,6 +31,7 @@ class TasksCard extends ConsumerStatefulWidget {
   final Priority priority;
   final TaskDifficulty difficulty;
   final String? taskType;
+  final Recurrence recurrence;
 
   @override
   ConsumerState<TasksCard> createState() => _TasksCardState();
@@ -278,6 +280,56 @@ class _TasksCardState extends ConsumerState<TasksCard>
                       },
                       orElse: () => const SizedBox.shrink(),
                     ),
+
+                    // Recurrence indicator (only visible when not Recurrence.none)
+                    if (widget.recurrence != Recurrence.none)
+                      Builder(builder: (context) {
+                        final String label;
+                        final IconData iconData;
+                        switch (widget.recurrence) {
+                          case Recurrence.daily:
+                            label = 'Daily';
+                            iconData = Icons.wb_sunny_rounded;
+                            break;
+                          case Recurrence.weekly:
+                            label = 'Weekly';
+                            iconData = Icons.hourglass_bottom_rounded;
+                            break;
+                          case Recurrence.monthly:
+                            label = 'Monthly';
+                            iconData = Icons.nightlight_round;
+                            break;
+                          case Recurrence.none:
+                            label = '';
+                            iconData = Icons.not_interested_rounded;
+                            break;
+                        }
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 3,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                iconData,
+                                size: 13,
+                                color: textColor.withAlpha(150),
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                label,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: textColor.withAlpha(150),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
 
                     // Time indicator
                     Container(

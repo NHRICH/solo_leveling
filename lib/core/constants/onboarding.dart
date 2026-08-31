@@ -15,28 +15,28 @@ class OnboardingPage {
 class OnboardingConstants {
   static final List<OnboardingPage> pages = [
     OnboardingPage(
-      title: 'Welcome to Journal',
+      title: 'I am the Shadow Monarch',
       description:
-          'Capture your thoughts, daily plans, and organize your life effortlessly.',
-      icon: Icons.menu_book_rounded,
+          'Embrace the power of the King of Shadows and rise above all.',
+      icon: Icons.star,
     ),
     OnboardingPage(
-      title: 'Stay Informed',
+      title: 'Awaken Your Gates',
       description:
-          'Allow notifications to receive timely reminders directly to your device.',
-      icon: Icons.notifications_active_rounded,
+          'Unleash your inner hunter and awaken the powers within.',
+      icon: Icons.star,
     ),
     OnboardingPage(
-      title: 'Your Data is Secure',
+      title: 'Ruler of the World',
       description:
-          'Keep your data safe with native local backups and easy restores. You hold the keys.',
-      icon: Icons.lock_outline_rounded,
+          'Command the forces of nature and bend destiny to your will.',
+      icon: Icons.terrain,
     ),
     OnboardingPage(
-      title: 'All Set!',
+      title: 'Step into the Unknown',
       description:
-          'Thank you for choosing us. Let\'s get started on your organized journey.',
-      icon: Icons.celebration_rounded,
+          'Enter a world of monsters, battles, and limitless evolution.',
+      icon: Icons.emoji_events,
     ),
   ];
 }
